@@ -1,11 +1,8 @@
 package com.djembefx;
 
-import com.djembefx.model.Loop;
-import com.djembefx.model.LoopPlayer;
-import com.djembefx.model.Note;
-import com.djembefx.model.TimePosition;
+import com.djembefx.model.*;
 import com.djembefx.model.ioc.ModelModule;
-import com.djembefx.view.LoopPane;
+import com.djembefx.view.control.LoopPane;
 import com.djembefx.view.ioc.ViewModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -14,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- *
  * User: Antoine Mischler <antoine@dooapp.com>
  * Date: 14/04/12
  * Time: 18:13
@@ -33,12 +29,16 @@ public class DjembeFX extends Application {
         Loop loop2 = new Loop();
         loop1.setLength(new TimePosition(128));
         loop2.setLength(new TimePosition(128));
-        loop1.getNotes().put(new TimePosition(1), new Note());
-        loop1.getNotes().put(new TimePosition(32), new Note());
-        loop1.getNotes().put(new TimePosition(63), new Note());
-        loop2.getNotes().put(new TimePosition(1), new Note());
-        player.getLoops().add(loop1);
-        player.getLoops().add(loop2);
+        loop1.getNotes().put(new TimePosition(0), new Note(DjembeType.SLAP));
+        loop1.getNotes().put(new TimePosition(48), new Note(DjembeType.SLAP));
+        loop1.getNotes().put(new TimePosition(64), new Note(DjembeType.SLAP));
+        loop1.getNotes().put(new TimePosition(96), new Note(DjembeType.TONE));
+        loop1.getNotes().put(new TimePosition(112), new Note(DjembeType.TONE));
+        loop2.getNotes().put(new TimePosition(0), new Note(DjembeType.OPEN));
+        loop2.getNotes().put(new TimePosition(32), new Note(DjembeType.TONE));
+        loop2.getNotes().put(new TimePosition(48), new Note(DjembeType.TONE));
+        loop2.getNotes().put(new TimePosition(96), new Note(DjembeType.SLAP));
+        player.getLoops().addAll(loop1, loop2);
         LoopPane loopPane = injector.getInstance(LoopPane.class);
         loopPane.getLoops().addAll(loop1, loop2);
         player.play();

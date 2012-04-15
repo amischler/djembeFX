@@ -17,7 +17,7 @@ public class LoopTimer {
 
     private final ObjectProperty<TimePosition> time = new SimpleObjectProperty<TimePosition>(new TimePosition(BigInteger.ZERO));
 
-    private final Timer timer = new Timer();
+    private final Timer timer = new Timer("Beat timer", true);
 
     public TimePosition getTime() {
         return time.get();
@@ -34,7 +34,7 @@ public class LoopTimer {
             public void run() {
                 time.set(new TimePosition(getTime().getPosition().add(BigInteger.ONE)));
             }
-        }, 0, 25);
+        }, 0, 20);
     }
 
     public void pause() {

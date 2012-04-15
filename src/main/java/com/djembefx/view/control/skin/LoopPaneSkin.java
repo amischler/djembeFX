@@ -7,12 +7,18 @@ import com.djembefx.view.control.LoopPane;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
+import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 
 import java.util.List;
 
@@ -29,6 +35,8 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
     final ReadOnlyObjectProperty<TimePosition> currentTimePosition;
 
+    final ObjectProperty<TimePosition> currentTimePositionFX = new SimpleObjectProperty<TimePosition>();
+
     final Provider<LoopPaneNode> loopPaneNodeProvider;
 
     final Provider<LoopControl> loopControlProvider;
@@ -44,6 +52,19 @@ public class LoopPaneSkin implements Skin<LoopPane> {
         this.currentTimePosition = currentTimePosition;
         this.loopPaneNodeProvider = loopPaneNodeProvider;
         this.loopControlProvider = loopControlProvider;
+        currentTimePositionFX.set(currentTimePosition.get());
+        currentTimePosition.addListener(new ChangeListener<TimePosition>() {
+            @Override
+            public void changed(ObservableValue<? extends TimePosition> observableValue, TimePosition timePosition, final TimePosition timePosition1) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        currentTimePositionFX.set(timePosition1);
+                    }
+                });
+
+            }
+        });
     }
 
     @Override
@@ -80,27 +101,31 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
     private void addLoop(List<? extends Loop> loops) {
         for (final Loop loop : loops) {
-            LoopControl control = loopControlProvider.get();
-            control.setRadius(100);
-            control.setLoop(loop);
-            node.getChildren().add(control);
-            Rotate rotate = new Rotate();
-            control.getTransforms().add(rotate);
-            Double angle = Math.random() * Math.PI;
-            control.setTranslateX(Math.cos(angle) * control.getRadius());
-            control.setTranslateY(Math.sin(angle) * control.getRadius());
-            rotate.angleProperty().bind(new DoubleBinding() {
+            LoopControl loopControl = loopControlProvider.get();
+            loopControl.setRadius(100);
+            loopControl.setLoop(loop);
+            Rotate dynamicRotate = new Rotate();
+            Translate translation = new Translate();
+            Double angle = Math.random() * Math.PI * 2;
+            translation.setX(Math.sin(angle) * loopControl.getRadius());
+            translation.setY(-Math.cos(angle) * loopControl.getRadius());
+            Rotate staticRotate = new Rotate();
+            staticRotate.setAngle((angle * 360 / (2 * Math.PI)) + 180);
+            dynamicRotate.angleProperty().bind(new DoubleBinding() {
                 {
-                    bind(currentTimePosition, loop.lengthProperty());
+                    bind(currentTimePositionFX, loop.lengthProperty());
                 }
 
                 @Override
                 protected double computeValue() {
-                    System.out.println("current time is " + currentTimePosition.get().getPosition());
-                    return currentTimePosition.get().getPosition().remainder(loop.getLength().getPosition()).doubleValue() /
-                            loop.getLength().getPosition().doubleValue() * 360;
+                    return (currentTimePositionFX.get().getPosition()
+                            .remainder(loop.getLength().getPosition())
+                            .doubleValue() /
+                            loop.getLength().getPosition().doubleValue()) * 360;
                 }
             });
+            loopControl.getTransforms().addAll(translation, dynamicRotate, staticRotate);
+            node.getChildren().add(loopControl);
         }
     }
 

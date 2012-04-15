@@ -1,5 +1,7 @@
 package com.djembefx.view;
 
+import com.djembefx.view.control.LoopPane;
+import com.djembefx.view.control.skin.LoopPaneSkin;
 import com.google.inject.Inject;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPaneBuilder;

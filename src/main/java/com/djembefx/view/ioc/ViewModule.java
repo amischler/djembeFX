@@ -1,6 +1,6 @@
 package com.djembefx.view.ioc;
 
-import com.djembefx.view.LoopPane;
+import com.djembefx.view.control.LoopPane;
 import com.djembefx.view.MainParent;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;

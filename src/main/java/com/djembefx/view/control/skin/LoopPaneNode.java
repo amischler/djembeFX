@@ -15,8 +15,8 @@ public class LoopPaneNode extends Pane {
         setTranslateX(200);
         setTranslateY(200);
         Circle center = new Circle();
-        center.setFill(Color.GREEN);
-        center.setRadius(5);
+        center.setFill(Color.RED);
+        center.setRadius(2);
         getChildren().add(center);
     }
 }

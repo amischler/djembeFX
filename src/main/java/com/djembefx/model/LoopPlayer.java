@@ -1,5 +1,6 @@
 package com.djembefx.model;
 
+import com.djembefx.render.SoundRenderer;
 import com.google.inject.Inject;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -7,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>
@@ -16,6 +18,9 @@ import java.util.LinkedList;
 public class LoopPlayer implements Player {
 
     private final ObservableList<Loop> loops = FXCollections.observableList(new LinkedList<Loop>());
+
+    @Inject
+    SoundRenderer soundRenderer;
 
     LoopTimer loopTimer;
 
@@ -29,19 +34,24 @@ public class LoopPlayer implements Player {
         loopTimer.timeProperty().addListener(new ChangeListener<TimePosition>() {
             @Override
             public void changed(ObservableValue<? extends TimePosition> observableValue, TimePosition t1, TimePosition t2) {
-                System.out.println("Pulse " + t2);
+                List<Note> toPlay = new LinkedList<Note>();
                 for (Loop loop : loops) {
-                    Note note = loop.getNotes().get(new TimePosition(t2.getPosition().remainder(loop.getLength().getPosition())));
+                    Note note = loop.getNotes().get(new TimePosition(t1.getPosition().remainder(loop.getLength().getPosition())));
                     if (note != null) {
-                        playNote(note);
+                        toPlay.add(note);
                     }
+                }
+                for (Note note: toPlay) {
+                    playNote(note);
                 }
             }
         });
     }
 
+    private final Djembe djembe = new Djembe();
+
     private void playNote(Note note) {
-        System.out.println("Playing " + note);
+        soundRenderer.render(note, djembe);
     }
 
     @Override

@@ -5,5 +5,5 @@ package com.djembefx.model;
  * Date: 15/04/12
  * Time: 15:23
  */
-public class NoteKind {
+public interface NoteKind<InstrumentType> {
 }

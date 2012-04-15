@@ -15,7 +15,6 @@ import javafx.beans.property.ReadOnlyObjectProperty;
  */
 public class ModelModule extends AbstractModule {
 
-
     @Override
     protected void configure() {
         bind(LoopTimer.class).in(Singleton.class);
