@@ -1,6 +1,7 @@
-package com.djembefx.view;
+package com.djembefx.view.control;
 
 import com.djembefx.model.Loop;
+import com.djembefx.view.LoopControlSkin;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;

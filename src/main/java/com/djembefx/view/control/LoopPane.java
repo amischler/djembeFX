@@ -1,4 +1,4 @@
-package com.djembefx.view;
+package com.djembefx.view.control;
 
 import com.djembefx.model.Loop;
 import javafx.collections.FXCollections;

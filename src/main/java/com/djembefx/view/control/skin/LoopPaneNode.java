@@ -1,4 +1,4 @@
-package com.djembefx.view;
+package com.djembefx.view.control.skin;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -12,6 +12,8 @@ import javafx.scene.shape.Circle;
 public class LoopPaneNode extends Pane {
 
     public LoopPaneNode() {
+        setTranslateX(200);
+        setTranslateY(200);
         Circle center = new Circle();
         center.setFill(Color.GREEN);
         center.setRadius(5);

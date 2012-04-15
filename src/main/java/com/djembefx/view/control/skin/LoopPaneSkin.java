@@ -1,7 +1,9 @@
-package com.djembefx.view;
+package com.djembefx.view.control.skin;
 
 import com.djembefx.model.Loop;
 import com.djembefx.model.TimePosition;
+import com.djembefx.view.control.LoopControl;
+import com.djembefx.view.control.LoopPane;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
@@ -94,6 +96,7 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
                 @Override
                 protected double computeValue() {
+                    System.out.println("current time is " + currentTimePosition.get().getPosition());
                     return currentTimePosition.get().getPosition().remainder(loop.getLength().getPosition()).doubleValue() /
                             loop.getLength().getPosition().doubleValue() * 360;
                 }

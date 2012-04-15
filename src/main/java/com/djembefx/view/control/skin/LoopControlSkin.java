@@ -1,8 +1,9 @@
-package com.djembefx.view;
+package com.djembefx.view.control.skin;
 
 import com.djembefx.model.Loop;
 import com.djembefx.model.Note;
 import com.djembefx.model.TimePosition;
+import com.djembefx.view.control.LoopControl;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -102,7 +103,7 @@ public class LoopControlSkin implements Skin<LoopControl> {
 
             @Override
             protected double computeValue() {
-                return Math.PI * key.getPosition().doubleValue() / loopControl.getLoop().getLength().getPosition().doubleValue();
+                return 2 *  Math.PI * key.getPosition().doubleValue() / loopControl.getLoop().getLength().getPosition().doubleValue();
             }
         });
         node.addNote(note, angle);

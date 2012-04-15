@@ -1,4 +1,4 @@
-package com.djembefx.view;
+package com.djembefx.view.control.skin;
 
 import com.djembefx.model.Note;
 import javafx.beans.binding.DoubleBinding;
@@ -24,7 +24,8 @@ public class LoopControlNode extends Pane {
 
     public LoopControlNode() {
         this.circle = new Circle();
-        circle.setStroke(Color.BLACK);
+        circle.setStroke(Color.GRAY);
+        circle.setStrokeWidth(2.0);
         circle.setFill(Color.TRANSPARENT);
         getChildren().add(circle);
     }
@@ -36,6 +37,7 @@ public class LoopControlNode extends Pane {
     public void addNote(Note note, final DoubleProperty angle) {
         Circle noteNode = new Circle();
         noteNode.setRadius(5);
+        noteNode.setStroke(Color.ORANGERED);
         noteNode.setFill(Color.ORANGE);
         noteNode.translateXProperty().bind(new DoubleBinding() {
             {
