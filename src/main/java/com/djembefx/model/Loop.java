@@ -13,6 +13,8 @@ import java.util.HashMap;
  */
 public class Loop {
 
+    private final StringProperty name = new SimpleStringProperty();
+
     private final ObjectProperty<TimePosition> length = new SimpleObjectProperty<TimePosition>();
 
     private final ObservableMap<TimePosition, Note> notes = FXCollections.observableMap(new HashMap<TimePosition, Note>());
@@ -33,4 +35,16 @@ public class Loop {
         return notes;
     }
 
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
+    public String getName() {
+        return name.get();
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

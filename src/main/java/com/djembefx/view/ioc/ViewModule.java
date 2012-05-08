@@ -1,14 +1,15 @@
 package com.djembefx.view.ioc;
 
 import com.djembefx.view.control.LoopPane;
-import com.djembefx.view.MainParent;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.google.inject.name.Names;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
+import java.io.IOException;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>
@@ -20,7 +21,7 @@ public class ViewModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(LoopPane.class).in(Singleton.class);
-        bind(Parent.class).annotatedWith(Names.named("scene")).to(MainParent.class).in(Singleton.class);
+        //bind(Parent.class).annotatedWith(Names.named("scene")).to(MainParent.class).in(Singleton.class);
     }
 
     @Provides
@@ -28,6 +29,12 @@ public class ViewModule extends AbstractModule {
     Scene provideScene(@Named("scene") Parent parent) {
         Scene scene = new Scene(parent);
         return scene;
+    }
+
+    @Named("scene")
+    @Provides
+    Parent provideParent() throws IOException {
+        return FXMLLoader.load(ViewModule.class.getClassLoader().getResource("com/djembefx/view/djembefx.fxml"));
     }
 
 }

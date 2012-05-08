@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import com.dooapp.fxform.FXForm?>
+
+<BorderPane id="BorderPane" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.djembefx.controller.DjembeFXController">
+  <center>
+    <AnchorPane id="anchorPane1" prefHeight="200.0" prefWidth="200.0">
+      <children>
+        <ScrollPane id="scrollPane1" fx:id="editorScrollPane" prefHeight="319.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        <Slider id="sliderHorizontal1" fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.5" max="5.0" value="1.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+      </children>
+    </AnchorPane>
+  </center>
+  <left>
+    <VBox id="vBox1" prefHeight="400.0" prefWidth="157.0">
+      <children>
+        <TabPane id="tabPane1" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+          <tabs>
+            <Tab id="tab1" text="Tools">
+              <content>
+                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab id="tab2" text="Instrument">
+              <content>
+                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+          </tabs>
+        </TabPane>
+        <ToolBar id="toolBar1">
+          <items>
+            <Label id="label1" text="Loops" />
+          </items>
+        </ToolBar>
+        <ListView id="listView1" fx:id="loopListView" prefHeight="200.0" prefWidth="200.0" />
+        <ToolBar id="toolBar2">
+          <items>
+            <Button id="button1" fx:id="addLoopButton" onAction="#addLoop" text="+" />
+            <Button id="button2" fx:id="deleteLoopButton" onAction="#deleteLoop" text="-" />
+          </items>
+        </ToolBar>
+      </children>
+    </VBox>
+  </left>
+  <right>
+    <Accordion id="accordion1" fx:id="rightAccordion">
+      <expandedPane>
+        <TitledPane id="titledPane1" fx:id="x3" animated="false" text="Properties">
+          <content>
+            <AnchorPane id="Content" fx:id="loopPropertiesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            <children>
+                <FXForm id="loopPropertiesForm" fx:id="loopPropertiesForm" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+            </children>
+          </content>
+        </TitledPane>
+      </expandedPane>
+      <panes>
+        <TitledPane id="titledPane3" fx:id="x2" animated="false" styleClass="first-titled-pane" text="Song">
+          <content>
+            <AnchorPane id="Content" fx:id="songPropertiesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            <children>
+                <FXForm id="songPropertiesForm" fx:id="songPropertiesForm" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+            </children>
+          </content>
+        </TitledPane>
+        <fx:reference source="x3" />
+        <TitledPane id="titledPane2" fx:id="x1" animated="false" text="Playback">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+          </content>
+        </TitledPane>
+      </panes>
+    </Accordion>
+  </right>
+</BorderPane>

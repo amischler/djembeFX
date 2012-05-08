@@ -1,11 +1,8 @@
 package com.djembefx;
 
+import com.djembefx.ioc.IOC;
 import com.djembefx.model.*;
-import com.djembefx.model.ioc.ModelModule;
 import com.djembefx.view.control.LoopPane;
-import com.djembefx.view.ioc.ViewModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -19,12 +16,11 @@ public class DjembeFX extends Application {
 
     @java.lang.Override
     public void start(Stage stage) throws Exception {
-        Injector injector = Guice.createInjector(new ViewModule(), new ModelModule());
-        stage.setScene(injector.getInstance(Scene.class));
+        stage.setScene(IOC.getInjector().getInstance(Scene.class));
         stage.setTitle("DjembeFX");
         stage.show();
 
-        LoopPlayer player = injector.getInstance(LoopPlayer.class);
+        LoopPlayer player = IOC.getInjector().getInstance(LoopPlayer.class);
         Loop loop1 = new Loop();
         Loop loop2 = new Loop();
         loop1.setLength(new TimePosition(128));
@@ -39,7 +35,7 @@ public class DjembeFX extends Application {
         loop2.getNotes().put(new TimePosition(48), new Note(DjembeType.TONE));
         loop2.getNotes().put(new TimePosition(96), new Note(DjembeType.SLAP));
         player.getLoops().addAll(loop1, loop2);
-        LoopPane loopPane = injector.getInstance(LoopPane.class);
+        LoopPane loopPane = IOC.getInjector().getInstance(LoopPane.class);
         loopPane.getLoops().addAll(loop1, loop2);
         player.play();
     }

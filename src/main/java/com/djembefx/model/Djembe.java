@@ -1,7 +1,6 @@
 package com.djembefx.model;
 
 import com.djembefx.render.SoundRendererImpl;
-import javafx.scene.media.AudioClip;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>
@@ -10,15 +9,15 @@ import javafx.scene.media.AudioClip;
  */
 public class Djembe implements Instrument<DjembeType> {
 
-    private final AudioClip toneClip = new AudioClip(SoundRendererImpl.class.getClassLoader().getResource("com/djembefx/media/D2_U.wav").toExternalForm());
+    private final String toneClip = SoundRendererImpl.class.getClassLoader().getResource("com/djembefx/media/D2_U.wav").toExternalForm();
 
-    private final AudioClip openClip = new AudioClip(SoundRendererImpl.class.getClassLoader().getResource("com/djembefx/media/D2_O.wav").toExternalForm());
+    private final String openClip = SoundRendererImpl.class.getClassLoader().getResource("com/djembefx/media/D2_O.wav").toExternalForm();
 
-    private final AudioClip slapClip = new AudioClip(SoundRendererImpl.class.getClassLoader().getResource("com/djembefx/media/D2_V.wav").toExternalForm());
+    private final String slapClip = SoundRendererImpl.class.getClassLoader().getResource("com/djembefx/media/D2_V.wav").toExternalForm();
 
 
     @Override
-    public AudioClip getClip(NoteKind<DjembeType> noteKind) {
+    public String getClip(NoteKind<DjembeType> noteKind) {
         if (noteKind == DjembeType.OPEN) {
             return openClip;
         } else if (noteKind == DjembeType.SLAP) {

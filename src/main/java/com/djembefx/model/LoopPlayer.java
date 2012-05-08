@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,16 +42,15 @@ public class LoopPlayer implements Player {
                         toPlay.add(note);
                     }
                 }
-                for (Note note: toPlay) {
-                    playNote(note);
-                }
+                if (toPlay.size() > 0)
+                    playNote(toPlay);
             }
         });
     }
 
     private final Djembe djembe = new Djembe();
 
-    private void playNote(Note note) {
+    private void playNote(Collection<Note> note) {
         soundRenderer.render(note, djembe);
     }
 

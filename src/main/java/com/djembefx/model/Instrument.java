@@ -1,7 +1,5 @@
 package com.djembefx.model;
 
-import javafx.scene.media.AudioClip;
-
 /**
  * User: Antoine Mischler <antoine@dooapp.com>
  * Date: 15/04/12
@@ -15,7 +13,7 @@ public interface Instrument<T extends InstrumentType> {
      * @param noteKind
      * @return
      */
-    public AudioClip getClip(NoteKind<T> noteKind);
+    public String getClip(NoteKind<T> noteKind);
 
 
 }

@@ -2,6 +2,10 @@ package com.djembefx.render;
 
 import com.djembefx.model.Instrument;
 import com.djembefx.model.Note;
+import com.djembefx.model.NoteKind;
+import javafx.scene.media.AudioClip;
+
+import java.util.*;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>
@@ -10,11 +14,30 @@ import com.djembefx.model.Note;
  */
 public class SoundRendererImpl implements SoundRenderer {
 
+    private Map<NoteKind, List<AudioClip>> map = new HashMap<NoteKind, List<AudioClip>>();
 
     @Override
-    public void render(Note note, Instrument instrument) {
-        System.out.println(note + "@" + System.currentTimeMillis());
-        instrument.getClip(note.getNoteKind()).play();
+    public void render(Collection<Note> note, Instrument instrument) {
+        //System.out.println(note + "@" + System.currentTimeMillis());
+        for (Note n : note) {
+            getOrCreateAudioClip(instrument, n.getNoteKind()).play();
+        }
+    }
+
+    private AudioClip getOrCreateAudioClip(Instrument instrument, NoteKind noteKind) {
+        if (!map.containsKey(noteKind)) {
+            map.put(noteKind, new LinkedList<AudioClip>());
+        }
+        for (AudioClip audioClip : map.get(noteKind)) {
+            if (!audioClip.isPlaying()) {
+                return audioClip;
+            }
+        }
+        System.out.println("Creating clip for " + noteKind);
+        AudioClip audioClip = new AudioClip(instrument.getClip(noteKind));
+        map.get(noteKind).add(audioClip);
+        return audioClip;
+
     }
 
 }
