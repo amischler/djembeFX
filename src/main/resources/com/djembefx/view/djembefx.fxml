@@ -5,7 +5,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
-<?import com.dooapp.fxform.FXForm?>
 
 <BorderPane id="BorderPane" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.djembefx.controller.DjembeFXController">
   <center>
@@ -17,8 +16,31 @@
     </AnchorPane>
   </center>
   <left>
-    <VBox id="vBox1" prefHeight="400.0" prefWidth="157.0">
+    <VBox id="vBox1" prefWidth="200.0">
       <children>
+        <MenuBar id="menuBar1">
+          <menus>
+            <Menu id="fileMenu1" text="File">
+              <items>
+                <MenuItem id="menuItem1" onAction="#newFile" text="New" />
+                <MenuItem id="menuItem3" onAction="#openFile" text="Open" />
+                <MenuItem id="menuItem2" onAction="#saveFile" text="Save" />
+                <MenuItem id="close1" onAction="#closeFile" text="Close" />
+                <MenuItem id="menuItem4" onAction="#quit" text="Quit" />
+              </items>
+            </Menu>
+            <Menu id="editMenu1" text="Edit">
+              <items>
+                <MenuItem id="delete1" text="Delete" />
+              </items>
+            </Menu>
+            <Menu id="helpMenu1" text="Help">
+              <items>
+                <MenuItem id="about1" text="About" />
+              </items>
+            </Menu>
+          </menus>
+        </MenuBar>
         <TabPane id="tabPane1" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
           <tabs>
             <Tab id="tab1" text="Tools">
@@ -49,14 +71,11 @@
     </VBox>
   </left>
   <right>
-    <Accordion id="accordion1" fx:id="rightAccordion">
+    <Accordion id="accordion1" fx:id="rightAccordion" prefWidth="200.0">
       <expandedPane>
         <TitledPane id="titledPane1" fx:id="x3" animated="false" text="Properties">
           <content>
             <AnchorPane id="Content" fx:id="loopPropertiesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            <children>
-                <FXForm id="loopPropertiesForm" fx:id="loopPropertiesForm" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
-            </children>
           </content>
         </TitledPane>
       </expandedPane>
@@ -64,9 +83,6 @@
         <TitledPane id="titledPane3" fx:id="x2" animated="false" styleClass="first-titled-pane" text="Song">
           <content>
             <AnchorPane id="Content" fx:id="songPropertiesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            <children>
-                <FXForm id="songPropertiesForm" fx:id="songPropertiesForm" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
-            </children>
           </content>
         </TitledPane>
         <fx:reference source="x3" />

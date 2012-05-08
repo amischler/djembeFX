@@ -21,7 +21,6 @@ public class ViewModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(LoopPane.class).in(Singleton.class);
-        //bind(Parent.class).annotatedWith(Names.named("scene")).to(MainParent.class).in(Singleton.class);
     }
 
     @Provides

@@ -2,8 +2,13 @@ package com.djembefx;
 
 import com.djembefx.ioc.IOC;
 import com.djembefx.model.*;
-import com.djembefx.view.control.LoopPane;
+import com.djembefx.model.persistence.PersistenceService;
+import com.google.inject.Inject;
 import javafx.application.Application;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -14,30 +19,43 @@ import javafx.stage.Stage;
  */
 public class DjembeFX extends Application {
 
-    @java.lang.Override
-    public void start(Stage stage) throws Exception {
-        stage.setScene(IOC.getInjector().getInstance(Scene.class));
-        stage.setTitle("DjembeFX");
-        stage.show();
+    @Inject
+    ObjectProperty<Song> currentSong;
 
-        LoopPlayer player = IOC.getInjector().getInstance(LoopPlayer.class);
-        Loop loop1 = new Loop();
-        Loop loop2 = new Loop();
-        loop1.setLength(new TimePosition(128));
-        loop2.setLength(new TimePosition(128));
-        loop1.getNotes().put(new TimePosition(0), new Note(DjembeType.SLAP));
-        loop1.getNotes().put(new TimePosition(48), new Note(DjembeType.SLAP));
-        loop1.getNotes().put(new TimePosition(64), new Note(DjembeType.SLAP));
-        loop1.getNotes().put(new TimePosition(96), new Note(DjembeType.TONE));
-        loop1.getNotes().put(new TimePosition(112), new Note(DjembeType.TONE));
-        loop2.getNotes().put(new TimePosition(0), new Note(DjembeType.OPEN));
-        loop2.getNotes().put(new TimePosition(32), new Note(DjembeType.TONE));
-        loop2.getNotes().put(new TimePosition(48), new Note(DjembeType.TONE));
-        loop2.getNotes().put(new TimePosition(96), new Note(DjembeType.SLAP));
-        player.getLoops().addAll(loop1, loop2);
-        LoopPane loopPane = IOC.getInjector().getInstance(LoopPane.class);
-        loopPane.getLoops().addAll(loop1, loop2);
-        player.play();
+    @Inject
+    Scene scene;
+
+    @Inject
+    PersistenceService persistenceService;
+
+    private Stage stage;
+
+    @java.lang.Override
+    public void start(Stage stage1) throws Exception {
+        IOC.getInjector().injectMembers(this);
+        this.stage = stage1;
+        stage.setScene(scene);
+        stage.show();
+        configure(currentSong.get());
+        currentSong.addListener(new ChangeListener<Song>() {
+            @Override
+            public void changed(ObservableValue<? extends Song> observableValue, Song song, Song song1) {
+                unconfigure(song);
+                configure(song1);
+            }
+        });
+        currentSong.set(persistenceService.load(DjembeFX.class.getClassLoader().getResource("com/djembefx/demo/demo.xml").toURI().getPath()));
+    }
+
+    private void configure(Song song1) {
+        if (song1 == null)
+            return;
+        stage.titleProperty().bind(new SimpleStringProperty("DjembeFX - ").concat(song1.titleProperty()));
+    }
+
+    private void unconfigure(Song song) {
+        stage.titleProperty().unbind();
+        stage.titleProperty().set("DjembeFX");
     }
 
     public static void main(String... args) {

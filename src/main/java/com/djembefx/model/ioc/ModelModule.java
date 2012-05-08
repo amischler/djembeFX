@@ -2,6 +2,7 @@ package com.djembefx.model.ioc;
 
 import com.djembefx.model.LoopTimer;
 import com.djembefx.model.TimePosition;
+import com.djembefx.model.persistence.ioc.PersistenceModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -17,6 +18,7 @@ public class ModelModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new PersistenceModule());
         bind(LoopTimer.class).in(Singleton.class);
     }
 
@@ -25,4 +27,5 @@ public class ModelModule extends AbstractModule {
     public ReadOnlyObjectProperty<TimePosition> provideCurrentTimePosition(LoopTimer timer) {
         return timer.timeProperty();
     }
+
 }

@@ -16,9 +16,36 @@ public class Song {
 
     private StringProperty title = new SimpleStringProperty();
 
+    private StringProperty path = new SimpleStringProperty();
+
     private ObservableList<Loop> loops = FXCollections.observableList(new LinkedList<Loop>());
 
     public ObservableList<Loop> getLoops() {
         return loops;
     }
+
+    public String getTitle() {
+        return title.get();
+    }
+
+    public void setTitle(String title1) {
+        this.title.set(title1);
+    }
+
+    public StringProperty titleProperty() {
+        return title;
+    }
+
+    public String getPath() {
+        return path.get();
+    }
+
+    public void setPath(String path1) {
+        this.path.set(path1);
+    }
+
+    public StringProperty pathProperty() {
+        return path;
+    }
+
 }
