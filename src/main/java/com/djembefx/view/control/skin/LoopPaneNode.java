@@ -12,11 +12,10 @@ import javafx.scene.shape.Circle;
 public class LoopPaneNode extends Pane {
 
     public LoopPaneNode() {
-        setTranslateX(200);
-        setTranslateY(200);
         Circle center = new Circle();
         center.setFill(Color.RED);
-        center.setRadius(2);
+        center.setRadius(5);
         getChildren().add(center);
     }
+
 }

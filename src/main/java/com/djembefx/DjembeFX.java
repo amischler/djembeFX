@@ -30,6 +30,9 @@ public class DjembeFX extends Application {
 
     private Stage stage;
 
+    @Inject
+    LoopPlayer player;
+
     @java.lang.Override
     public void start(Stage stage1) throws Exception {
         IOC.getInjector().injectMembers(this);
@@ -45,6 +48,8 @@ public class DjembeFX extends Application {
             }
         });
         currentSong.set(persistenceService.load(DjembeFX.class.getClassLoader().getResource("com/djembefx/demo/demo.xml").toURI().getPath()));
+        player.getLoops().setAll(currentSong.get().getLoops());
+        player.play();
     }
 
     private void configure(Song song1) {

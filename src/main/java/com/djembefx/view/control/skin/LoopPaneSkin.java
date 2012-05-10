@@ -15,6 +15,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.transform.Rotate;
@@ -43,6 +44,8 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
     private ListChangeListener<Loop> loopsChangeListener;
 
+    private ChangeListener<ObservableList<Loop>> loopsPropertyListener;
+
     @Inject
     public LoopPaneSkin(LoopPane loopPane,
                         @Named("current") ReadOnlyObjectProperty<TimePosition> currentTimePosition,
@@ -63,6 +66,15 @@ public class LoopPaneSkin implements Skin<LoopPane> {
                     }
                 });
 
+            }
+        });
+        loopPane.loopsProperty().addListener(loopsPropertyListener = new ChangeListener<ObservableList<Loop>>() {
+            @Override
+            public void changed(ObservableValue<? extends ObservableList<Loop>> observableValue, ObservableList<Loop> loops, ObservableList<Loop> loops1) {
+                loops.removeListener(loopsChangeListener);
+                loops1.addListener(loopsChangeListener);
+                removeLoop(loops);
+                addLoop(loops1);
             }
         });
     }
@@ -137,5 +149,6 @@ public class LoopPaneSkin implements Skin<LoopPane> {
     @Override
     public void dispose() {
         loopPane.getLoops().removeListener(loopsChangeListener);
+        loopPane.loopsProperty().removeListener(loopsPropertyListener);
     }
 }

@@ -2,6 +2,7 @@ package com.djembefx.controller;
 
 import com.djembefx.model.Loop;
 import com.djembefx.model.Song;
+import com.djembefx.model.TimePosition;
 import com.djembefx.model.persistence.PersistenceService;
 import com.djembefx.view.control.LoopPane;
 import com.djembefx.view.control.skin.LoopPaneSkin;
@@ -11,19 +12,21 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionModel;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -52,7 +55,10 @@ public class DjembeFXController extends AbstractController {
     AnchorPane loopPropertiesPane;
 
     @FXML
-    ScrollPane editorScrollPane;
+    Pane editorStackPane;
+
+    @FXML
+    Slider zoomSlider;
 
     @Inject
     LoopPane loopPane;
@@ -62,18 +68,6 @@ public class DjembeFXController extends AbstractController {
 
     @Inject
     PersistenceService persistenceService;
-
-    private ListChangeListener<Loop> loopChangeListener = new ListChangeListener<Loop>() {
-        @Override
-        public void onChanged(Change<? extends Loop> change) {
-            while (change.next()) {
-                loopListView.getItems().addAll(change.getAddedSubList());
-                loopListView.getItems().removeAll(change.getRemoved());
-                loopPane.getLoops().addAll(change.getAddedSubList());
-                loopPane.getLoops().removeAll(change.getRemoved());
-            }
-        }
-    };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -85,31 +79,43 @@ public class DjembeFXController extends AbstractController {
                 configure(song1);
             }
         });
-        configure(currentSong.get());
         loopSelectionModel.set(loopListView.getSelectionModel());
-        FXForm songPropertiesForm = new FXForm();
-        songPropertiesForm.sourceProperty().bind(currentSong);
-        songPropertiesPane.getChildren().add(songPropertiesForm);
+        initializeSongPropertiesPane();
+        initializeLoopPropertiesPane();
+        initializeLoopPane();
+        configure(currentSong.get());
+    }
+
+    private void initializeLoopPane() {
+        loopPane.setSkin(loopPaneSkin);
+        loopPane.scaleXProperty().bind(zoomSlider.valueProperty());
+        loopPane.scaleYProperty().bind(zoomSlider.valueProperty());
+        editorStackPane.getChildren().add(loopPane);
+    }
+
+    private void initializeLoopPropertiesPane() {
         FXForm loopPropertiesForm = new FXForm();
         loopPropertiesForm.sourceProperty().bind(loopSelectionModel.get().selectedItemProperty());
         loopPropertiesPane.getChildren().add(loopPropertiesForm);
-        loopPane.setSkin(loopPaneSkin);
-        editorScrollPane.setContent(loopPane);
+    }
+
+    private void initializeSongPropertiesPane() {
+        FXForm songPropertiesForm = new FXForm();
+        songPropertiesForm.sourceProperty().bind(currentSong);
+        songPropertiesPane.getChildren().add(songPropertiesForm);
     }
 
     private void configure(Song song1) {
         if (song1 != null) {
-            song1.getLoops().addListener(loopChangeListener);
-            loopListView.getItems().setAll(song1.getLoops());
-            loopPane.getLoops().setAll(song1.getLoops());
+            loopListView.setItems(song1.getLoops());
+            loopPane.setLoops(song1.getLoops());
         }
     }
 
     private void unconfigure(Song song) {
         if (song != null) {
-            song.getLoops().remove(loopChangeListener);
-            loopListView.getItems().clear();
-            loopPane.getLoops().clear();
+            loopListView.setItems(FXCollections.emptyObservableList());
+            loopPane.setLoops(FXCollections.<Loop>emptyObservableList());
         }
     }
 
@@ -117,6 +123,7 @@ public class DjembeFXController extends AbstractController {
     private void addLoop(ActionEvent event) {
         Loop loop = new Loop();
         loop.setName("New loop");
+        loop.setLength(new TimePosition(BigInteger.ONE));
         currentSong.get().getLoops().add(loop);
     }
 

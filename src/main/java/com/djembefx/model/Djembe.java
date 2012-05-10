@@ -18,11 +18,11 @@ public class Djembe implements Instrument<DjembeType> {
 
     @Override
     public String getClip(NoteKind<DjembeType> noteKind) {
-        if (noteKind == DjembeType.OPEN) {
+        if (noteKind.getClass() == DjembeType.OPEN.getClass()) {
             return openClip;
-        } else if (noteKind == DjembeType.SLAP) {
+        } else if (noteKind.getClass() == DjembeType.SLAP.getClass()) {
             return slapClip;
-        } else if (noteKind == DjembeType.TONE) {
+        } else if (noteKind.getClass() == DjembeType.TONE.getClass()) {
             return toneClip;
         }
         throw new IllegalArgumentException("This instrument can not play this note kind " + noteKind);
