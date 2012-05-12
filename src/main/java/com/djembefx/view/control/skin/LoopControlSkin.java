@@ -4,6 +4,9 @@ import com.djembefx.model.Loop;
 import com.djembefx.model.Note;
 import com.djembefx.model.TimePosition;
 import com.djembefx.view.control.LoopControl;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Provider;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -23,6 +26,9 @@ import java.util.Map;
  */
 public class LoopControlSkin implements Skin<LoopControl> {
 
+    @Inject
+    Provider<LoopControlNode> loopControlNodeProvider;
+
     private final LoopControl loopControl;
 
     private LoopControlNode node;
@@ -30,6 +36,7 @@ public class LoopControlSkin implements Skin<LoopControl> {
     private Map<Note, DoubleProperty> noteAngle = new HashMap<Note, DoubleProperty>();
 
     private MapChangeListener<TimePosition, Note> notesChangeListener;
+
     private ChangeListener<Loop> loopChangeListener;
 
     public LoopControlSkin(LoopControl loopControl) {
@@ -44,7 +51,7 @@ public class LoopControlSkin implements Skin<LoopControl> {
     @Override
     public Node getNode() {
         if (node == null) {
-            node = new LoopControlNode();
+            node = loopControlNodeProvider.get();
             node.getCircle().radiusProperty().bind(loopControl.radiusProperty());
             loopControl.loopProperty().addListener(loopChangeListener = new ChangeListener<Loop>() {
                 @Override
@@ -103,7 +110,7 @@ public class LoopControlSkin implements Skin<LoopControl> {
 
             @Override
             protected double computeValue() {
-                return 2 *  Math.PI * key.getPosition().doubleValue() / loopControl.getLoop().getLength().getPosition().doubleValue();
+                return 2 * Math.PI * key.getPosition().doubleValue() / loopControl.getLoop().getLength().getPosition().doubleValue();
             }
         });
         node.addNote(note, angle);
@@ -114,4 +121,18 @@ public class LoopControlSkin implements Skin<LoopControl> {
         unconfigureLoop(loopControl.getLoop());
         loopControl.loopProperty().removeListener(loopChangeListener);
     }
+
+    public static class Factory {
+
+        @Inject
+        Injector injector;
+
+        public LoopControlSkin create(LoopControl control) {
+            LoopControlSkin loopControlSkin = new LoopControlSkin(control);
+            injector.injectMembers(loopControlSkin);
+            return loopControlSkin;
+        }
+
+    }
+
 }

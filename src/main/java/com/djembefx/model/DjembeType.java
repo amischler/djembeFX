@@ -23,6 +23,14 @@ public class DjembeType implements InstrumentType {
             return "Tone";
         }
 
+        public int hashCode() {
+            return getClass().hashCode();
+        }
+
+        public boolean equals(Object o) {
+            return getClass().equals(o.getClass());
+        }
+
     }
 
     public static class Slap implements NoteKind<DjembeType> {
@@ -31,12 +39,28 @@ public class DjembeType implements InstrumentType {
             return "Slap";
         }
 
+        public int hashCode() {
+            return getClass().hashCode();
+        }
+
+        public boolean equals(Object o) {
+            return getClass().equals(o.getClass());
+        }
+
     }
 
     public static class Open implements NoteKind<DjembeType> {
 
         public String toString() {
             return "Open";
+        }
+
+        public int hashCode() {
+            return getClass().hashCode();
+        }
+
+        public boolean equals(Object o) {
+            return getClass().equals(o.getClass());
         }
 
     }

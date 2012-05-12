@@ -1,5 +1,6 @@
 package com.djembefx;
 
+import com.djembefx.controller.init.SoundRendererInitializer;
 import com.djembefx.ioc.IOC;
 import com.djembefx.model.*;
 import com.djembefx.model.persistence.PersistenceService;
@@ -28,6 +29,9 @@ public class DjembeFX extends Application {
     @Inject
     PersistenceService persistenceService;
 
+    @Inject
+    SoundRendererInitializer soundRendererInitializer;
+
     private Stage stage;
 
     @Inject
@@ -48,6 +52,7 @@ public class DjembeFX extends Application {
             }
         });
         currentSong.set(persistenceService.load(DjembeFX.class.getClassLoader().getResource("com/djembefx/demo/demo.xml").toURI().getPath()));
+        soundRendererInitializer.init();
         player.getLoops().setAll(currentSong.get().getLoops());
         player.play();
     }

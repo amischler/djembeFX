@@ -1,13 +1,13 @@
 package com.djembefx.model;
 
-import com.djembefx.render.SoundRenderer;
+import com.djembefx.model.event.EventBus;
+import com.djembefx.model.event.PlayNoteEvent;
 import com.google.inject.Inject;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class LoopPlayer implements Player {
     private final ObservableList<Loop> loops = FXCollections.observableList(new LinkedList<Loop>());
 
     @Inject
-    SoundRenderer soundRenderer;
+    EventBus eventBus;
 
     LoopTimer loopTimer;
 
@@ -39,19 +39,11 @@ public class LoopPlayer implements Player {
                 for (Loop loop : loops) {
                     Note note = loop.getNotes().get(new TimePosition(t1.getPosition().remainder(loop.getLength().getPosition())));
                     if (note != null) {
-                        toPlay.add(note);
+                        eventBus.publish(new PlayNoteEvent(note, null));
                     }
                 }
-                if (toPlay.size() > 0)
-                    playNote(toPlay);
             }
         });
-    }
-
-    private final Djembe djembe = new Djembe();
-
-    private void playNote(Collection<Note> note) {
-        soundRenderer.render(note, djembe);
     }
 
     @Override

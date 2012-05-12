@@ -2,6 +2,7 @@ package com.djembefx.view.control;
 
 import com.djembefx.model.Loop;
 import com.djembefx.view.control.skin.LoopControlSkin;
+import com.google.inject.Inject;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -19,8 +20,9 @@ public class LoopControl extends Control {
 
     private final DoubleProperty radius = new SimpleDoubleProperty(150);
 
-    public LoopControl() {
-        setSkin(new LoopControlSkin(this));
+    @Inject
+    public LoopControl(LoopControlSkin.Factory factory) {
+        setSkin(factory.create(this));
     }
 
     public Loop getLoop() {

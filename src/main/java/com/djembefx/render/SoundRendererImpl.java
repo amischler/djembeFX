@@ -17,11 +17,8 @@ public class SoundRendererImpl implements SoundRenderer {
     private Map<NoteKind, List<AudioClip>> map = new HashMap<NoteKind, List<AudioClip>>();
 
     @Override
-    public void render(Collection<Note> note, Instrument instrument) {
-        //System.out.println(note + "@" + System.currentTimeMillis());
-        for (Note n : note) {
-            getOrCreateAudioClip(instrument, n.getNoteKind()).play();
-        }
+    public void render(Note note, Instrument instrument) {
+            getOrCreateAudioClip(instrument, note.getNoteKind()).play();
     }
 
     private AudioClip getOrCreateAudioClip(Instrument instrument, NoteKind noteKind) {
