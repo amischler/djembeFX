@@ -1,4 +1,4 @@
-package com.djembefx.controller.init;
+package com.djembefx.application.init;
 
 import com.djembefx.model.event.EventBus;
 import com.djembefx.model.event.EventListener;
@@ -11,7 +11,7 @@ import com.google.inject.Inject;
  * Date: 12/05/12
  * Time: 20:43
  */
-public class SoundRendererInitializer {
+public class SoundRendererInitializer implements Initializer {
 
     @Inject
     EventBus eventBus;
