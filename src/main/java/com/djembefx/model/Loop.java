@@ -19,6 +19,8 @@ public class Loop {
 
     private final ObservableMap<TimePosition, Note> notes = FXCollections.observableMap(new HashMap<TimePosition, Note>());
 
+    private final ObjectProperty<Instrument> instrument = new SimpleObjectProperty<Instrument>();
+
     public TimePosition getLength() {
         return length.get();
     }
@@ -47,4 +49,17 @@ public class Loop {
     public String toString() {
         return getName();
     }
+
+    public Instrument getInstrument() {
+        return instrument.get();
+    }
+
+    public void setInstrument(Instrument instrument1) {
+        this.instrument.set(instrument1);
+    }
+
+    public ObjectProperty<Instrument> instrumentProperty() {
+        return instrument;
+    }
+
 }

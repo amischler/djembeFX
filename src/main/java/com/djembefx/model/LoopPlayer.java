@@ -3,6 +3,9 @@ package com.djembefx.model;
 import com.djembefx.model.event.EventBus;
 import com.djembefx.model.event.PlayNoteEvent;
 import com.google.inject.Inject;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,7 +21,7 @@ import java.util.List;
  */
 public class LoopPlayer implements Player {
 
-    private final ObservableList<Loop> loops = FXCollections.observableList(new LinkedList<Loop>());
+    private final ObjectProperty<ObservableList<Loop>> loops = new SimpleObjectProperty<ObservableList<Loop>>(FXCollections.observableList(new LinkedList<Loop>()));
 
     @Inject
     EventBus eventBus;
@@ -26,7 +29,7 @@ public class LoopPlayer implements Player {
     LoopTimer loopTimer;
 
     public ObservableList<Loop> getLoops() {
-        return loops;
+        return loops.get();
     }
 
     @Inject
@@ -36,10 +39,10 @@ public class LoopPlayer implements Player {
             @Override
             public void changed(ObservableValue<? extends TimePosition> observableValue, TimePosition t1, TimePosition t2) {
                 List<Note> toPlay = new LinkedList<Note>();
-                for (Loop loop : loops) {
+                for (Loop loop : loops.get()) {
                     Note note = loop.getNotes().get(new TimePosition(t1.getPosition().remainder(loop.getLength().getPosition())));
                     if (note != null) {
-                        eventBus.publish(new PlayNoteEvent(note, null));
+                        eventBus.publish(new PlayNoteEvent(note, loop.getInstrument()));
                     }
                 }
             }
@@ -48,16 +51,28 @@ public class LoopPlayer implements Player {
 
     @Override
     public void play() {
-        loopTimer.play();
+        loopTimer.setPlaying(true);
     }
 
     @Override
     public void pause() {
-        loopTimer.pause();
+        loopTimer.setPlaying(false);
     }
 
     @Override
     public void stop() {
         loopTimer.stop();
+    }
+
+    public void setLoops(ObservableList<Loop> loops) {
+        this.loops.set(loops);
+    }
+
+    public boolean isPlaying() {
+        return loopTimer.isPlaying();
+    }
+
+    public BooleanProperty playingProperty() {
+        return loopTimer.playingProperty();
     }
 }

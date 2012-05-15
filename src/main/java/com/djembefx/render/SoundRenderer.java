@@ -9,7 +9,7 @@ import com.google.inject.ImplementedBy;
  * Date: 15/04/12
  * Time: 10:43
  */
-@ImplementedBy(LoggerNoteRenderer.class)
+@ImplementedBy(SoundRendererImpl.class)
 public interface SoundRenderer {
 
     public void render(Note note, Instrument instrument);

@@ -1,6 +1,7 @@
 package com.djembefx.controller;
 
 import com.djembefx.model.Loop;
+import com.djembefx.model.LoopPlayer;
 import com.djembefx.model.Song;
 import com.djembefx.model.TimePosition;
 import com.djembefx.model.persistence.PersistenceService;
@@ -9,6 +10,7 @@ import com.djembefx.view.control.skin.LoopPaneSkin;
 import com.dooapp.fxform.FXForm;
 import com.google.inject.Inject;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +20,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -60,6 +65,9 @@ public class DjembeFXController extends AbstractController {
     @FXML
     Slider zoomSlider;
 
+    @FXML
+    ToggleButton playPauseToggleButton;
+
     @Inject
     LoopPane loopPane;
 
@@ -68,6 +76,9 @@ public class DjembeFXController extends AbstractController {
 
     @Inject
     PersistenceService persistenceService;
+
+    @Inject
+    LoopPlayer loopPlayer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -84,6 +95,9 @@ public class DjembeFXController extends AbstractController {
         initializeLoopPropertiesPane();
         initializeLoopPane();
         configure(currentSong.get());
+        playPauseToggleButton.textProperty().bind(
+                Bindings.when(playPauseToggleButton.selectedProperty()).then("Pause").otherwise("Play"));
+        playPauseToggleButton.selectedProperty().bindBidirectional(loopPlayer.playingProperty());
     }
 
     private void initializeLoopPane() {
@@ -169,6 +183,22 @@ public class DjembeFXController extends AbstractController {
     @FXML
     void closeFile() {
         currentSong.set(null);
+    }
+
+    @FXML
+    void onKeyReleased(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.SPACE) {
+            playPause();
+            keyEvent.consume();
+        }
+    }
+
+    private void playPause() {
+        if (loopPlayer.isPlaying()) {
+            loopPlayer.pause();
+        } else {
+            loopPlayer.play();
+        }
     }
 
 }

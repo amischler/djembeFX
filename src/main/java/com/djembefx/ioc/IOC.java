@@ -1,5 +1,6 @@
 package com.djembefx.ioc;
 
+import com.djembefx.application.ioc.ApplicationModule;
 import com.djembefx.controller.ioc.ControllerModule;
 import com.djembefx.model.ioc.ModelModule;
 import com.djembefx.view.ioc.ViewModule;
@@ -23,6 +24,9 @@ public class IOC {
     }
 
     private static void init() {
-        injector = Guice.createInjector(new ViewModule(), new ModelModule(), new ControllerModule());
+        injector = Guice.createInjector(new ViewModule(),
+                new ModelModule(),
+                new ControllerModule(),
+                new ApplicationModule());
     }
 }
