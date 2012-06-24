@@ -1,17 +1,12 @@
 package com.djembefx.view.control.skin;
 
 import com.djembefx.model.Loop;
-import com.djembefx.model.TimePosition;
+import com.djembefx.model.pulse.Pulser;
 import com.djembefx.view.control.LoopControl;
 import com.djembefx.view.control.LoopPane;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.name.Named;
-import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -34,13 +29,11 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
     private LoopPaneNode node;
 
-    final ReadOnlyObjectProperty<TimePosition> currentTimePosition;
-
-    final ObjectProperty<TimePosition> currentTimePositionFX = new SimpleObjectProperty<TimePosition>();
-
     final Provider<LoopPaneNode> loopPaneNodeProvider;
 
     final Provider<LoopControl> loopControlProvider;
+
+    final Pulser pulser;
 
     private ListChangeListener<Loop> loopsChangeListener;
 
@@ -48,26 +41,13 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
     @Inject
     public LoopPaneSkin(LoopPane loopPane,
-                        @Named("current") ReadOnlyObjectProperty<TimePosition> currentTimePosition,
+                        Pulser pulser,
                         Provider<LoopPaneNode> loopPaneNodeProvider,
                         Provider<LoopControl> loopControlProvider) {
         this.loopPane = loopPane;
-        this.currentTimePosition = currentTimePosition;
         this.loopPaneNodeProvider = loopPaneNodeProvider;
         this.loopControlProvider = loopControlProvider;
-        currentTimePositionFX.set(currentTimePosition.get());
-        currentTimePosition.addListener(new ChangeListener<TimePosition>() {
-            @Override
-            public void changed(ObservableValue<? extends TimePosition> observableValue, TimePosition timePosition, final TimePosition timePosition1) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        currentTimePositionFX.set(timePosition1);
-                    }
-                });
-
-            }
-        });
+        this.pulser = pulser;
         loopPane.loopsProperty().addListener(loopsPropertyListener = new ChangeListener<ObservableList<Loop>>() {
             @Override
             public void changed(ObservableValue<? extends ObservableList<Loop>> observableValue, ObservableList<Loop> loops, ObservableList<Loop> loops1) {
@@ -125,15 +105,14 @@ public class LoopPaneSkin implements Skin<LoopPane> {
             staticRotate.setAngle((angle * 360 / (2 * Math.PI)) + 180);
             dynamicRotate.angleProperty().bind(new DoubleBinding() {
                 {
-                    bind(currentTimePositionFX, loop.lengthProperty());
+                    bind(pulser.pulseProperty(), loop.lengthProperty());
                 }
 
                 @Override
                 protected double computeValue() {
-                    return (currentTimePositionFX.get().getPosition()
-                            .remainder(loop.getLength().getPosition())
-                            .doubleValue() /
-                            loop.getLength().getPosition().doubleValue()) * 360;
+                    return (((double) (pulser.getPulse() %
+                            loop.getLength())) /
+                            ((double) loop.getLength()) * 360d);
                 }
             });
             loopControl.getTransforms().addAll(translation, dynamicRotate, staticRotate);

@@ -3,10 +3,7 @@ package com.djembefx.view.control;
 import com.djembefx.model.Loop;
 import com.djembefx.view.control.skin.LoopControlSkin;
 import com.google.inject.Inject;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.control.Control;
 
 /**
@@ -19,6 +16,10 @@ public class LoopControl extends Control {
     private final ObjectProperty<Loop> loop = new SimpleObjectProperty<Loop>();
 
     private final DoubleProperty radius = new SimpleDoubleProperty(150);
+
+    private final LongProperty majorTickUnit = new SimpleLongProperty(32L);
+
+    private final LongProperty minorTickCount = new SimpleLongProperty();
 
     @Inject
     public LoopControl(LoopControlSkin.Factory factory) {
@@ -48,4 +49,29 @@ public class LoopControl extends Control {
     public DoubleProperty radiusProperty() {
         return radius;
     }
+
+    public Long getMajorTickUnit() {
+        return majorTickUnit.get();
+    }
+
+    public void setMajorTickUnit(Long majorTickUnit1) {
+        this.majorTickUnit.set(majorTickUnit1);
+    }
+
+    public LongProperty majorTickUnitProperty() {
+        return majorTickUnit;
+    }
+
+    public Long getMinorTickCount() {
+        return minorTickCount.get();
+    }
+
+    public void setMinorTickCount(Long minorTickCount1) {
+        this.minorTickCount.set(minorTickCount1);
+    }
+
+    public LongProperty minorTickCountProperty() {
+        return minorTickCount;
+    }
+
 }

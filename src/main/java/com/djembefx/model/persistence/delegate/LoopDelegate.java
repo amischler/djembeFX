@@ -23,23 +23,14 @@ public class LoopDelegate extends PersistenceDelegate {
         Loop loop = (Loop) o;
         return new Expression(o,
                 this.getClass(),
-                "createLoopV2",
+                "createLoopV1",
                 new Object[]{loop.getName(), loop.getLength(), loop.getNotes(), loop.getInstrument().getClass()});
     }
 
-    public static Loop createLoopV1(String name, TimePosition timePosition, ObservableMap<TimePosition, Note> notes) {
+    public static Loop createLoopV1(String name, Long length, ObservableMap<Long, Note> notes, Class<Instrument> instrument) {
         Loop loop = new Loop();
         loop.setName(name);
-        loop.setLength(timePosition);
-        loop.getNotes().putAll(notes);
-        loop.setInstrument(new Djembe());
-        return loop;
-    }
-
-    public static Loop createLoopV2(String name, TimePosition timePosition, ObservableMap<TimePosition, Note> notes, Class<Instrument> instrument) {
-        Loop loop = new Loop();
-        loop.setName(name);
-        loop.setLength(timePosition);
+        loop.setLength(length);
         loop.getNotes().putAll(notes);
         try {
             loop.setInstrument(instrument.newInstance());

@@ -16,9 +16,13 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.LineBuilder;
 import javafx.util.Duration;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +42,10 @@ public class LoopControlNode extends Pane {
     private Map<NoteKind, Color> colors = new HashMap<NoteKind, Color>();
 
     private Map<Note, EventListener> eventListenerMap = new HashMap<Note, EventListener>();
+
+    private List<Node> majorTicks = new LinkedList<Node>();
+
+    private List<Node> minorTicks = new LinkedList<Node>();
 
     public LoopControlNode() {
         colors.put(DjembeType.TONE, Color.OLIVE);
@@ -111,6 +119,50 @@ public class LoopControlNode extends Pane {
             eventListenerMap.remove(note);
             noteMap.remove(note);
         }
+    }
+
+    public void buildMajorTicks(Long majorTickUnit, Long totalSize) {
+        getChildren().removeAll(majorTicks);
+        majorTicks.clear();
+        Long currentValue = 0L;
+        while (currentValue < totalSize) {
+            addMajorTick(currentValue * 2 * Math.PI / totalSize);
+            currentValue = currentValue + majorTickUnit;
+        }
+    }
+
+    private void addMajorTick(final double angle) {
+        double lineHeight = 5.0;
+        Line line = LineBuilder.create().startX(-Math.sin(angle) * lineHeight)
+                .startY(Math.cos(angle) * lineHeight)
+                .endX(Math.sin(angle) * lineHeight)
+                .endY(-Math.cos(angle) * lineHeight).build();
+        line.translateXProperty().bind(new DoubleBinding() {
+            {
+                bind(circle.radiusProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                return -Math.sin(angle) * circle.getRadius();
+            }
+        });
+        line.translateYProperty().bind(new DoubleBinding() {
+            {
+                bind(circle.radiusProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                return -Math.cos(angle) * circle.getRadius();
+            }
+        });
+        getChildren().add(line);
+    }
+
+    public void buildMinorTicks(Long minorTickCount) {
+        getChildren().removeAll(minorTicks);
+        minorTicks.clear();
     }
 
 }

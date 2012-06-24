@@ -15,25 +15,25 @@ public class Loop {
 
     private final StringProperty name = new SimpleStringProperty();
 
-    private final ObjectProperty<TimePosition> length = new SimpleObjectProperty<TimePosition>();
+    private final LongProperty length = new SimpleLongProperty();
 
-    private final ObservableMap<TimePosition, Note> notes = FXCollections.observableMap(new HashMap<TimePosition, Note>());
+    private final ObservableMap<Long, Note> notes = FXCollections.observableMap(new HashMap<Long, Note>());
 
     private final ObjectProperty<Instrument> instrument = new SimpleObjectProperty<Instrument>();
 
-    public TimePosition getLength() {
+    public long getLength() {
         return length.get();
     }
 
-    public void setLength(TimePosition length) {
+    public void setLength(long length) {
         this.length.set(length);
     }
 
-    public ObjectProperty<TimePosition> lengthProperty() {
+    public LongProperty lengthProperty() {
         return length;
     }
 
-    public ObservableMap<TimePosition, Note> getNotes() {
+    public ObservableMap<Long, Note> getNotes() {
         return notes;
     }
 

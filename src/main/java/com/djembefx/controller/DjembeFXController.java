@@ -1,10 +1,10 @@
 package com.djembefx.controller;
 
 import com.djembefx.model.Loop;
-import com.djembefx.model.LoopPlayer;
 import com.djembefx.model.Song;
-import com.djembefx.model.TimePosition;
 import com.djembefx.model.persistence.PersistenceService;
+import com.djembefx.model.pulse.Pulser;
+import com.djembefx.model.pulse.Status;
 import com.djembefx.view.control.LoopPane;
 import com.djembefx.view.control.skin.LoopPaneSkin;
 import com.dooapp.fxform.FXForm;
@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.math.BigInteger;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -78,7 +77,7 @@ public class DjembeFXController extends AbstractController {
     PersistenceService persistenceService;
 
     @Inject
-    LoopPlayer loopPlayer;
+    Pulser pulser;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -97,7 +96,26 @@ public class DjembeFXController extends AbstractController {
         configure(currentSong.get());
         playPauseToggleButton.textProperty().bind(
                 Bindings.when(playPauseToggleButton.selectedProperty()).then("Pause").otherwise("Play"));
-        playPauseToggleButton.selectedProperty().bindBidirectional(loopPlayer.playingProperty());
+        playPauseToggleButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean aBoolean1) {
+                if (aBoolean1) {
+                    pulser.start();
+                } else {
+                    pulser.pause();
+                }
+            }
+        });
+        pulser.statusProperty().addListener(new ChangeListener<Status>() {
+            @Override
+            public void changed(ObservableValue<? extends Status> observableValue, Status status, Status status1) {
+                if (status1 == Status.RUNNING) {
+                    playPauseToggleButton.setSelected(true);
+                } else {
+                    playPauseToggleButton.setSelected(false);
+                }
+            }
+        });
     }
 
     private void initializeLoopPane() {
@@ -137,7 +155,7 @@ public class DjembeFXController extends AbstractController {
     private void addLoop(ActionEvent event) {
         Loop loop = new Loop();
         loop.setName("New loop");
-        loop.setLength(new TimePosition(BigInteger.ONE));
+        loop.setLength(32L);
         currentSong.get().getLoops().add(loop);
     }
 
@@ -194,10 +212,10 @@ public class DjembeFXController extends AbstractController {
     }
 
     private void playPause() {
-        if (loopPlayer.isPlaying()) {
-            loopPlayer.pause();
+        if (pulser.getStatus() == Status.RUNNING) {
+            pulser.pause();
         } else {
-            loopPlayer.play();
+            pulser.start();
         }
     }
 

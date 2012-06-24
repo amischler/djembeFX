@@ -3,7 +3,6 @@ package com.djembefx.model.persistence.ioc;
 import com.djembefx.model.Loop;
 import com.djembefx.model.Note;
 import com.djembefx.model.Song;
-import com.djembefx.model.TimePosition;
 import com.djembefx.model.persistence.XMLEncoderFactory;
 import com.djembefx.model.persistence.XMLEncoderFactoryImpl;
 import com.djembefx.model.persistence.delegate.*;
@@ -35,7 +34,6 @@ public class PersistenceModule extends AbstractModule {
         delegateMap.put(ObservableListWrapper.class, new ObservableListDelegate());
         delegateMap.put(ObservableMapWrapper.class, new ObservableMapDelegate());
         delegateMap.put(Song.class, new SongDelegate());
-        delegateMap.put(TimePosition.class, new TimePositionDelegate());
         return delegateMap;
     }
 

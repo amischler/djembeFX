@@ -2,7 +2,6 @@ package com.djembefx.view.control.skin;
 
 import com.djembefx.model.Loop;
 import com.djembefx.model.Note;
-import com.djembefx.model.TimePosition;
 import com.djembefx.view.control.LoopControl;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -35,9 +34,13 @@ public class LoopControlSkin implements Skin<LoopControl> {
 
     private Map<Note, DoubleProperty> noteAngle = new HashMap<Note, DoubleProperty>();
 
-    private MapChangeListener<TimePosition, Note> notesChangeListener;
+    private MapChangeListener<Long, Note> notesChangeListener;
 
     private ChangeListener<Loop> loopChangeListener;
+
+    private ChangeListener<Number> majorTickUnitListener;
+
+    private ChangeListener<Number> minorTickCountListener;
 
     public LoopControlSkin(LoopControl loopControl) {
         this.loopControl = loopControl;
@@ -68,18 +71,20 @@ public class LoopControlSkin implements Skin<LoopControl> {
     private void unconfigureLoop(Loop loop) {
         if (loop == null)
             return;
-        for (TimePosition timePosition : loop.getNotes().keySet()) {
-            removeNote(timePosition, loop.getNotes().get(timePosition));
+        for (Long time : loop.getNotes().keySet()) {
+            removeNote(time, loop.getNotes().get(time));
         }
         loop.getNotes().remove(notesChangeListener);
+        loopControl.majorTickUnitProperty().removeListener(majorTickUnitListener);
+        loopControl.minorTickCountProperty().removeListener(minorTickCountListener);
     }
 
     private void configureLoop(Loop loop) {
         if (loop == null)
             return;
-        loop.getNotes().addListener(notesChangeListener = new MapChangeListener<TimePosition, Note>() {
+        loop.getNotes().addListener(notesChangeListener = new MapChangeListener<Long, Note>() {
             @Override
-            public void onChanged(Change<? extends TimePosition, ? extends Note> change) {
+            public void onChanged(Change<? extends Long, ? extends Note> change) {
                 if (change.wasAdded()) {
                     addNote(change.getKey(), change.getValueAdded());
                 }
@@ -88,18 +93,32 @@ public class LoopControlSkin implements Skin<LoopControl> {
                 }
             }
         });
-        for (TimePosition timePosition : loop.getNotes().keySet()) {
-            addNote(timePosition, loop.getNotes().get(timePosition));
+        for (Long time : loop.getNotes().keySet()) {
+            addNote(time, loop.getNotes().get(time));
         }
+        loopControl.majorTickUnitProperty().addListener(majorTickUnitListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number bigInteger, Number bigInteger1) {
+                node.buildMajorTicks(bigInteger1.longValue(), loopControl.getLoop().getLength());
+            }
+        });
+        node.buildMajorTicks(loopControl.getMajorTickUnit(), loopControl.getLoop().getLength());
+        loopControl.minorTickCountProperty().addListener(minorTickCountListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number bigInteger, Number bigInteger1) {
+                node.buildMinorTicks(bigInteger1.longValue());
+            }
+        });
+        node.buildMinorTicks(loopControl.getMinorTickCount());
     }
 
-    private void removeNote(TimePosition key, Note note) {
+    private void removeNote(Long key, Note note) {
         noteAngle.get(note).unbind();
         noteAngle.remove(note);
         node.removeNote(note);
     }
 
-    private void addNote(final TimePosition key, Note note) {
+    private void addNote(final Long key, Note note) {
         DoubleProperty angle = new SimpleDoubleProperty();
         noteAngle.put(note, angle);
         angle.bind(new DoubleBinding() {
@@ -110,7 +129,7 @@ public class LoopControlSkin implements Skin<LoopControl> {
 
             @Override
             protected double computeValue() {
-                return 2 * Math.PI * key.getPosition().doubleValue() / loopControl.getLoop().getLength().getPosition().doubleValue();
+                return 2 * Math.PI * key.longValue() / loopControl.getLoop().getLength();
             }
         });
         node.addNote(note, angle);

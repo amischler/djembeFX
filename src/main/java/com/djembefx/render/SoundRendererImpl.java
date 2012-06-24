@@ -2,7 +2,6 @@ package com.djembefx.render;
 
 import com.djembefx.model.Instrument;
 import com.djembefx.model.Note;
-import com.djembefx.model.NoteKind;
 import javafx.scene.media.AudioClip;
 
 import java.util.*;
@@ -14,25 +13,23 @@ import java.util.*;
  */
 public class SoundRendererImpl implements SoundRenderer {
 
-    private Map<NoteKind, List<AudioClip>> map = new HashMap<NoteKind, List<AudioClip>>();
+    private Map<String, List<AudioClip>> cache = new HashMap<String, List<AudioClip>>();
 
     @Override
     public void render(Note note, Instrument instrument) {
-            getOrCreateAudioClip(instrument, note.getNoteKind()).play();
+        System.out.println("Rendering" + note + " @" + System.nanoTime());
+        getOrCreateAudioClip(instrument.getClip(note.getNoteKind())).play(0.5);
     }
 
-    private AudioClip getOrCreateAudioClip(Instrument instrument, NoteKind noteKind) {
-        if (!map.containsKey(noteKind)) {
-            map.put(noteKind, new LinkedList<AudioClip>());
+    private AudioClip getOrCreateAudioClip(String url) {
+        if (!cache.containsKey(url)) {
+            cache.put(url, new LinkedList<AudioClip>());
         }
-        for (AudioClip audioClip : map.get(noteKind)) {
-            if (!audioClip.isPlaying()) {
-                return audioClip;
-            }
+        for (AudioClip audioClip : cache.get(url)) {
+            return audioClip;
         }
-        System.out.println("Creating clip for " + noteKind);
-        AudioClip audioClip = new AudioClip(instrument.getClip(noteKind));
-        map.get(noteKind).add(audioClip);
+        AudioClip audioClip = new AudioClip(url);
+        cache.get(url).add(audioClip);
         return audioClip;
 
     }
