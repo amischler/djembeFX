@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
@@ -15,7 +16,16 @@
             <Pane id="stackPane1" fx:id="editorStackPane" maxHeight="4000.0" maxWidth="4000.0" minHeight="4000.0" minWidth="4000.0" prefHeight="4000.0" prefWidth="4000.0" />
           </content>
         </ScrollPane>
-        <Slider id="sliderHorizontal1" fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.5" max="10.0" value="1.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+        <Slider id="sliderHorizontal1" fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.5" max="10.0" value="1.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+        <ChoiceBox fx:id="loopPaneLayoutChoiceBox" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:value="Item 1" />
+              <String fx:value="Item 2" />
+              <String fx:value="Item 3" />
+            </FXCollections>
+          </items>
+        </ChoiceBox>
       </children>
     </AnchorPane>
   </center>

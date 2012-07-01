@@ -6,6 +6,7 @@ import com.djembefx.model.persistence.PersistenceService;
 import com.djembefx.model.pulse.Pulser;
 import com.djembefx.model.pulse.Status;
 import com.djembefx.view.control.LoopPane;
+import com.djembefx.view.control.LoopPaneLayout;
 import com.djembefx.view.control.skin.LoopPaneSkin;
 import com.dooapp.fxform.FXForm;
 import com.google.inject.Inject;
@@ -17,10 +18,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionModel;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -32,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -67,6 +66,12 @@ public class DjembeFXController extends AbstractController {
     @FXML
     ToggleButton playPauseToggleButton;
 
+    @FXML
+    ChoiceBox<LoopPaneLayout> loopPaneLayoutChoiceBox;
+
+    @Inject
+    List<LoopPaneLayout> loopPaneLayoutList;
+
     @Inject
     LoopPane loopPane;
 
@@ -93,6 +98,7 @@ public class DjembeFXController extends AbstractController {
         initializeSongPropertiesPane();
         initializeLoopPropertiesPane();
         initializeLoopPane();
+        initializeLoopPaneLayoutChoiceBox();
         configure(currentSong.get());
         playPauseToggleButton.textProperty().bind(
                 Bindings.when(playPauseToggleButton.selectedProperty()).then("Pause").otherwise("Play"));
@@ -114,6 +120,16 @@ public class DjembeFXController extends AbstractController {
                 } else {
                     playPauseToggleButton.setSelected(false);
                 }
+            }
+        });
+    }
+
+    private void initializeLoopPaneLayoutChoiceBox() {
+        loopPaneLayoutChoiceBox.getItems().setAll(loopPaneLayoutList);
+        loopPaneLayoutChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<LoopPaneLayout>() {
+            @Override
+            public void changed(ObservableValue<? extends LoopPaneLayout> observableValue, LoopPaneLayout loopPaneLayout, LoopPaneLayout loopPaneLayout1) {
+                loopPane.setLoopPaneLayout(loopPaneLayout1);
             }
         });
     }

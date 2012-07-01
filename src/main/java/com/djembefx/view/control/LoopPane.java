@@ -18,6 +18,8 @@ public class LoopPane extends Control {
 
     private ObjectProperty<ObservableList<Loop>> loops = new SimpleObjectProperty<ObservableList<Loop>>(FXCollections.observableList(new LinkedList<Loop>()));
 
+    private ObjectProperty<LoopPaneLayout> loopPaneLayout = new SimpleObjectProperty<LoopPaneLayout>();
+
     public ObservableList<Loop> getLoops() {
         return loops.get();
     }
@@ -28,6 +30,18 @@ public class LoopPane extends Control {
 
     public ObjectProperty<ObservableList<Loop>> loopsProperty() {
         return loops;
+    }
+
+    public LoopPaneLayout getLoopPaneLayout() {
+        return loopPaneLayout.get();
+    }
+
+    public void setLoopPaneLayout(LoopPaneLayout loopPaneLayout1) {
+        this.loopPaneLayout.set(loopPaneLayout1);
+    }
+
+    public ObjectProperty<LoopPaneLayout> loopPanelLayoutProperty() {
+        return loopPaneLayout;
     }
 
 }

@@ -1,22 +1,21 @@
 package com.djembefx.view.control.skin;
 
 import com.djembefx.model.Loop;
-import com.djembefx.model.pulse.Pulser;
 import com.djembefx.view.control.LoopControl;
 import com.djembefx.view.control.LoopPane;
+import com.djembefx.view.control.LoopPaneLayout;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>
@@ -33,21 +32,21 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
     final Provider<LoopControl> loopControlProvider;
 
-    final Pulser pulser;
-
     private ListChangeListener<Loop> loopsChangeListener;
 
     private ChangeListener<ObservableList<Loop>> loopsPropertyListener;
 
+    private Map<Loop, LoopControl> loopControlMap = new HashMap<Loop, LoopControl>();
+
+    private ChangeListener<LoopPaneLayout> loopPaneLayoutChangeListener;
+
     @Inject
     public LoopPaneSkin(LoopPane loopPane,
-                        Pulser pulser,
                         Provider<LoopPaneNode> loopPaneNodeProvider,
                         Provider<LoopControl> loopControlProvider) {
         this.loopPane = loopPane;
         this.loopPaneNodeProvider = loopPaneNodeProvider;
         this.loopControlProvider = loopControlProvider;
-        this.pulser = pulser;
         loopPane.loopsProperty().addListener(loopsPropertyListener = new ChangeListener<ObservableList<Loop>>() {
             @Override
             public void changed(ObservableValue<? extends ObservableList<Loop>> observableValue, ObservableList<Loop> loops, ObservableList<Loop> loops1) {
@@ -55,6 +54,12 @@ public class LoopPaneSkin implements Skin<LoopPane> {
                 loops1.addListener(loopsChangeListener);
                 removeLoop(loops);
                 addLoop(loops1);
+            }
+        });
+        loopPane.loopPanelLayoutProperty().addListener(loopPaneLayoutChangeListener = new ChangeListener<LoopPaneLayout>() {
+            @Override
+            public void changed(ObservableValue<? extends LoopPaneLayout> observableValue, LoopPaneLayout loopPaneLayout, LoopPaneLayout loopPaneLayout1) {
+                loopPaneLayout1.layout(loopControlMap.values());
             }
         });
     }
@@ -88,36 +93,21 @@ public class LoopPaneSkin implements Skin<LoopPane> {
     }
 
     private void removeLoop(List<? extends Loop> removed) {
-        //To change body of created methods use File | Settings | File Templates.
+        for (Loop loop : removed) {
+            node.getChildren().remove(loopControlMap.get(loop));
+            loopControlMap.remove(loop);
+        }
+        loopPane.getLoopPaneLayout().layout(loopControlMap.values());
     }
 
     private void addLoop(List<? extends Loop> loops) {
-        for (final Loop loop : loops) {
+        for (Loop loop : loops) {
             LoopControl loopControl = loopControlProvider.get();
-            loopControl.setRadius(100);
             loopControl.setLoop(loop);
-            Rotate dynamicRotate = new Rotate();
-            Translate translation = new Translate();
-            Double angle = Math.random() * Math.PI * 2;
-            translation.setX(Math.sin(angle) * loopControl.getRadius());
-            translation.setY(-Math.cos(angle) * loopControl.getRadius());
-            Rotate staticRotate = new Rotate();
-            staticRotate.setAngle((angle * 360 / (2 * Math.PI)) + 180);
-            dynamicRotate.angleProperty().bind(new DoubleBinding() {
-                {
-                    bind(pulser.pulseProperty(), loop.lengthProperty());
-                }
-
-                @Override
-                protected double computeValue() {
-                    return (((double) (pulser.getPulse() %
-                            loop.getLength())) /
-                            ((double) loop.getLength()) * 360d);
-                }
-            });
-            loopControl.getTransforms().addAll(translation, dynamicRotate, staticRotate);
+            loopControlMap.put(loop, loopControl);
             node.getChildren().add(loopControl);
         }
+        loopPane.getLoopPaneLayout().layout(loopControlMap.values());
     }
 
     private LoopPaneNode createNode() {
@@ -129,5 +119,6 @@ public class LoopPaneSkin implements Skin<LoopPane> {
     public void dispose() {
         loopPane.getLoops().removeListener(loopsChangeListener);
         loopPane.loopsProperty().removeListener(loopsPropertyListener);
+        loopPane.loopPanelLayoutProperty().removeListener(loopPaneLayoutChangeListener);
     }
 }
