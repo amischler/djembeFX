@@ -13,6 +13,20 @@
     -fx-stroke-width: 2;
 }
 
-.loop-control-node .note {
+.loop-control .note {
+    -fx-stroke-width: 1;
     -fx-stroke: black;
+}
+
+.loop-control .note:hover {
+    -fx-stroke-width: 2;
+    -fx-stroke: black;
+}
+
+.loop-control .minor-tick {
+    -fx-stroke: grey;
+}
+
+.loop-control .major-tick {
+    -fx-stroke: grey;
 }

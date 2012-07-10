@@ -19,7 +19,7 @@ public class LoopControl extends Control {
 
     private final LongProperty majorTickUnit = new SimpleLongProperty(32L);
 
-    private final LongProperty minorTickCount = new SimpleLongProperty();
+    private final LongProperty minorTickCount = new SimpleLongProperty(3);
 
     @Inject
     public LoopControl(LoopControlSkin.Factory factory) {

@@ -115,10 +115,10 @@ public class LoopControlSkin implements Skin<LoopControl> {
         loopControl.minorTickCountProperty().addListener(minorTickCountListener = new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number bigInteger, Number bigInteger1) {
-                node.buildMinorTicks(bigInteger1.longValue());
+                node.buildMinorTicks(bigInteger1.longValue(), loopControl.getMajorTickUnit(), loopControl.getLoop().getLength());
             }
         });
-        node.buildMinorTicks(loopControl.getMinorTickCount());
+        node.buildMinorTicks(loopControl.getMinorTickCount(), loopControl.getMajorTickUnit(), loopControl.getLoop().getLength());
     }
 
     private void removeNote(Long key, Note note) {

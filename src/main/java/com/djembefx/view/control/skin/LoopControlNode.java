@@ -124,18 +124,35 @@ public class LoopControlNode extends Pane {
         majorTicks.clear();
         Long currentValue = 0L;
         while (currentValue < totalSize) {
-            addMajorTick(currentValue * 2 * Math.PI / totalSize);
+            Node tick = createTick(currentValue * 2 * Math.PI / totalSize, 3.0);
+            tick.getStyleClass().add("major-tick");
+            majorTicks.add(tick);
             currentValue = currentValue + majorTickUnit;
         }
+        getChildren().addAll(majorTicks);
     }
 
-    private void addMajorTick(final double angle) {
-        double lineHeight = 3.0;
-        Line line = LineBuilder.create().startX(-Math.sin(angle) * lineHeight)
-                .startY(Math.cos(angle) * lineHeight)
-                .endX(Math.sin(angle) * lineHeight)
-                .endY(-Math.cos(angle) * lineHeight).build();
-        line.getStyleClass().add("major-tick");
+    public void buildMinorTicks(Long minorTickCount, Long majorTickUnit, Long totalSize) {
+        getChildren().removeAll(minorTicks);
+        minorTicks.clear();
+        Long currentValue = 0L;
+        Long minorTickUnit = (long) ((majorTickUnit) / (minorTickCount + 1.0));
+        while (currentValue < totalSize) {
+            if (currentValue % majorTickUnit != 0) {
+                Node tick = createTick(currentValue * 2 * Math.PI / totalSize, 1.0);
+                tick.getStyleClass().add("minor-tick");
+                minorTicks.add(tick);
+            }
+            currentValue = currentValue + minorTickUnit;
+        }
+        getChildren().addAll(minorTicks);
+    }
+
+    private Node createTick(final double angle, double length) {
+        Line line = LineBuilder.create().startX(-Math.sin(angle) * length)
+                .startY(-Math.cos(angle) * length)
+                .endX(Math.sin(angle) * length)
+                .endY(Math.cos(angle) * length).build();
         line.translateXProperty().bind(new DoubleBinding() {
             {
                 bind(circle.radiusProperty());
@@ -156,12 +173,7 @@ public class LoopControlNode extends Pane {
                 return -Math.cos(angle) * circle.getRadius();
             }
         });
-        getChildren().add(line);
-    }
-
-    public void buildMinorTicks(Long minorTickCount) {
-        getChildren().removeAll(minorTicks);
-        minorTicks.clear();
+        return line;
     }
 
 }
