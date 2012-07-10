@@ -12,7 +12,11 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.ScaleTransitionBuilder;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -39,6 +43,8 @@ public class LoopControlNode extends Pane {
 
     private final Circle circle;
 
+    private final DoubleProperty ghosAngleProperty = new SimpleDoubleProperty();
+
     private Map<NoteKind, Color> colors = new HashMap<NoteKind, Color>();
 
     private Map<Note, EventListener> eventListenerMap = new HashMap<Note, EventListener>();
@@ -53,7 +59,46 @@ public class LoopControlNode extends Pane {
         colors.put(DjembeType.SLAP, Color.ORANGE);
         this.circle = new Circle();
         circle.getStyleClass().add("loop");
+        circle.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getY() < 0) {
+                    ghosAngleProperty.set(Math.atan(mouseEvent.getX() / mouseEvent.getY()));
+                } else {
+                    ghosAngleProperty.set(Math.PI + Math.atan(mouseEvent.getX() / mouseEvent.getY()));
+                }
+            }
+        });
         getChildren().add(circle);
+        createGhostNode();
+    }
+
+    private void createGhostNode() {
+        Circle ghostNode = new Circle();
+        ghostNode.getStyleClass().add("ghost");
+        ghostNode.setRadius(5);
+        ghostNode.visibleProperty().bind(circle.hoverProperty());
+        ghostNode.translateXProperty().bind(new DoubleBinding() {
+            {
+                bind(circle.radiusProperty(), ghosAngleProperty);
+            }
+
+            @Override
+            protected double computeValue() {
+                return -Math.sin(ghosAngleProperty.getValue()) * circle.getRadius();
+            }
+        });
+        ghostNode.translateYProperty().bind(new DoubleBinding() {
+            {
+                bind(circle.radiusProperty(), ghosAngleProperty);
+            }
+
+            @Override
+            protected double computeValue() {
+                return -Math.cos(ghosAngleProperty.getValue()) * circle.getRadius();
+            }
+        });
+        getChildren().add(ghostNode);
     }
 
     public Circle getCircle() {
@@ -174,6 +219,14 @@ public class LoopControlNode extends Pane {
             }
         });
         return line;
+    }
+
+    public double getGhostAngle() {
+        return ghosAngleProperty.get();
+    }
+
+    public ReadOnlyDoubleProperty ghostAngleProperty() {
+        return ghosAngleProperty;
     }
 
 }

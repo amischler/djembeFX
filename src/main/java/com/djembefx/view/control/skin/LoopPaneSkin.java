@@ -52,11 +52,9 @@ public class LoopPaneSkin implements Skin<LoopPane> {
             if (loopControlMap.containsKey(loop)) {
                 LoopControl control = loopControlMap.get(loop);
                 control.getStyleClass().remove(LoopControlSkin.Css.SELECTED);
-                control.getStyleClass().add(LoopControlSkin.Css.DEFAULT);
             }
             if (loopControlMap.containsKey(loop1)) {
                 LoopControl control = loopControlMap.get(loop1);
-                control.getStyleClass().remove(LoopControlSkin.Css.DEFAULT);
                 control.getStyleClass().add(LoopControlSkin.Css.SELECTED);
             }
         }

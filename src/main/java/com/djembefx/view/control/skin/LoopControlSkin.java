@@ -1,5 +1,6 @@
 package com.djembefx.view.control.skin;
 
+import com.djembefx.model.DjembeType;
 import com.djembefx.model.Loop;
 import com.djembefx.model.Note;
 import com.djembefx.view.control.LoopControl;
@@ -12,8 +13,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
+import javafx.scene.input.MouseEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +91,7 @@ public class LoopControlSkin implements Skin<LoopControl> {
         loopControl.minorTickCountProperty().removeListener(minorTickCountListener);
     }
 
-    private void configureLoop(Loop loop) {
+    private void configureLoop(final Loop loop) {
         if (loop == null)
             return;
         loop.getNotes().addListener(notesChangeListener = new MapChangeListener<Long, Note>() {
@@ -119,6 +122,12 @@ public class LoopControlSkin implements Skin<LoopControl> {
             }
         });
         node.buildMinorTicks(loopControl.getMinorTickCount(), loopControl.getMajorTickUnit(), loopControl.getLoop().getLength());
+        node.getCircle().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                loop.getNotes().put((long) (node.getGhostAngle() * loopControl.getLoop().getLength() / (2 * Math.PI)), new Note(DjembeType.TONE));
+            }
+        });
     }
 
     private void removeNote(Long key, Note note) {

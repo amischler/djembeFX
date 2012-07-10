@@ -30,3 +30,7 @@
 .loop-control .major-tick {
     -fx-stroke: grey;
 }
+
+.loop-control .ghost {
+    -fx-fill: blue;
+}
