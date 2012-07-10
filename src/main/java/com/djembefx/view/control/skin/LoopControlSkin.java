@@ -25,6 +25,14 @@ import java.util.Map;
  */
 public class LoopControlSkin implements Skin<LoopControl> {
 
+    public static class Css {
+
+        public final static String DEFAULT = "loop-control";
+
+        public final static String SELECTED = "loop-control-selected";
+
+    }
+
     @Inject
     Provider<LoopControlNode> loopControlNodeProvider;
 
@@ -44,6 +52,7 @@ public class LoopControlSkin implements Skin<LoopControl> {
 
     public LoopControlSkin(LoopControl loopControl) {
         this.loopControl = loopControl;
+        loopControl.getStyleClass().add(Css.DEFAULT);
     }
 
     @Override

@@ -6,12 +6,16 @@ import com.djembefx.view.control.LoopPane;
 import com.djembefx.view.control.LoopPaneLayout;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Skin;
+import javafx.scene.input.MouseEvent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,13 +44,33 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
     private ChangeListener<LoopPaneLayout> loopPaneLayoutChangeListener;
 
+    final ObjectProperty<SelectionModel<Loop>> loopSelectionModel;
+
+    final ChangeListener<Loop> selectedLoopListener = new ChangeListener<Loop>() {
+        @Override
+        public void changed(ObservableValue<? extends Loop> observableValue, Loop loop, Loop loop1) {
+            if (loopControlMap.containsKey(loop)) {
+                LoopControl control = loopControlMap.get(loop);
+                control.getStyleClass().remove(LoopControlSkin.Css.SELECTED);
+                control.getStyleClass().add(LoopControlSkin.Css.DEFAULT);
+            }
+            if (loopControlMap.containsKey(loop1)) {
+                LoopControl control = loopControlMap.get(loop1);
+                control.getStyleClass().remove(LoopControlSkin.Css.DEFAULT);
+                control.getStyleClass().add(LoopControlSkin.Css.SELECTED);
+            }
+        }
+    };
+
     @Inject
     public LoopPaneSkin(LoopPane loopPane,
                         Provider<LoopPaneNode> loopPaneNodeProvider,
-                        Provider<LoopControl> loopControlProvider) {
+                        Provider<LoopControl> loopControlProvider,
+                        ObjectProperty<SelectionModel<Loop>> loopSelectionModel) {
         this.loopPane = loopPane;
         this.loopPaneNodeProvider = loopPaneNodeProvider;
         this.loopControlProvider = loopControlProvider;
+        this.loopSelectionModel = loopSelectionModel;
         loopPane.loopsProperty().addListener(loopsPropertyListener = new ChangeListener<ObservableList<Loop>>() {
             @Override
             public void changed(ObservableValue<? extends ObservableList<Loop>> observableValue, ObservableList<Loop> loops, ObservableList<Loop> loops1) {
@@ -62,6 +86,17 @@ public class LoopPaneSkin implements Skin<LoopPane> {
                 loopPaneLayout1.layout(loopControlMap.values());
             }
         });
+        loopSelectionModel.addListener(new ChangeListener<SelectionModel<Loop>>() {
+            @Override
+            public void changed(ObservableValue<? extends SelectionModel<Loop>> observableValue, SelectionModel<Loop> loopSelectionModel, SelectionModel<Loop> loopSelectionModel1) {
+                if (loopSelectionModel != null) {
+                    loopSelectionModel.selectedItemProperty().removeListener(selectedLoopListener);
+                }
+                if (loopSelectionModel1 != null) {
+                    loopSelectionModel1.selectedItemProperty().addListener(selectedLoopListener);
+                }
+            }
+        });
     }
 
     @Override
@@ -73,6 +108,12 @@ public class LoopPaneSkin implements Skin<LoopPane> {
     public Node getNode() {
         if (node == null) {
             node = createNode();
+            node.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    loopSelectionModel.get().clearSelection();
+                }
+            });
             loopPane.getLoops().addListener(loopsChangeListener = new ListChangeListener<Loop>() {
 
                 @Override
@@ -102,9 +143,16 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
     private void addLoop(List<? extends Loop> loops) {
         for (Loop loop : loops) {
-            LoopControl loopControl = loopControlProvider.get();
+            final LoopControl loopControl = loopControlProvider.get();
             loopControl.setLoop(loop);
             loopControlMap.put(loop, loopControl);
+            loopControl.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    loopSelectionModel.get().select(loopControl.getLoop());
+                    mouseEvent.consume();
+                }
+            });
             node.getChildren().add(loopControl);
         }
         loopPane.getLoopPaneLayout().layout(loopControlMap.values());

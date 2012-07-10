@@ -48,13 +48,11 @@ public class LoopControlNode extends Pane {
     private List<Node> minorTicks = new LinkedList<Node>();
 
     public LoopControlNode() {
-        colors.put(DjembeType.TONE, Color.OLIVE);
-        colors.put(DjembeType.OPEN, Color.BLUEVIOLET);
+        colors.put(DjembeType.TONE, Color.BROWN);
+        colors.put(DjembeType.OPEN, Color.RED);
         colors.put(DjembeType.SLAP, Color.ORANGE);
         this.circle = new Circle();
-        circle.setStroke(Color.LIGHTGRAY);
-        circle.setStrokeWidth(2.0);
-        circle.setFill(Color.TRANSPARENT);
+        circle.getStyleClass().add("loop");
         getChildren().add(circle);
     }
 
@@ -64,8 +62,8 @@ public class LoopControlNode extends Pane {
 
     public void addNote(final Note note, final DoubleProperty angle) {
         Circle noteNode = new Circle();
+        noteNode.getStyleClass().add("note");
         noteNode.setRadius(5);
-        noteNode.setStroke(Color.GRAY);
         noteNode.setFill(colors.get(note.getNoteKind()));
         noteNode.translateXProperty().bind(new DoubleBinding() {
             {
@@ -132,11 +130,12 @@ public class LoopControlNode extends Pane {
     }
 
     private void addMajorTick(final double angle) {
-        double lineHeight = 5.0;
+        double lineHeight = 3.0;
         Line line = LineBuilder.create().startX(-Math.sin(angle) * lineHeight)
                 .startY(Math.cos(angle) * lineHeight)
                 .endX(Math.sin(angle) * lineHeight)
                 .endY(-Math.cos(angle) * lineHeight).build();
+        line.getStyleClass().add("major-tick");
         line.translateXProperty().bind(new DoubleBinding() {
             {
                 bind(circle.radiusProperty());

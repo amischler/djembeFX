@@ -1,5 +1,6 @@
 package com.djembefx.application.ioc;
 
+import com.djembefx.application.init.CssLoaderInitializer;
 import com.djembefx.application.init.Initializer;
 import com.djembefx.application.init.PlayerInitializer;
 import com.djembefx.application.init.SoundRendererInitializer;
@@ -25,10 +26,12 @@ public class ApplicationModule extends AbstractModule {
     @Singleton
     public List<Initializer> providesInitializer(
             SoundRendererInitializer soundRendererInitializer,
-            PlayerInitializer playerInitializer) {
+            PlayerInitializer playerInitializer,
+            CssLoaderInitializer cssLoaderInitializer) {
         List<Initializer> initializerList = new LinkedList<Initializer>();
         initializerList.add(soundRendererInitializer);
         initializerList.add(playerInitializer);
+        initializerList.add(cssLoaderInitializer);
         return initializerList;
     }
 

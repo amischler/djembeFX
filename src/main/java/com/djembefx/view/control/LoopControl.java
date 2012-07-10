@@ -26,6 +26,11 @@ public class LoopControl extends Control {
         setSkin(factory.create(this));
     }
 
+    @Override
+    protected String getUserAgentStylesheet() {
+        return "com/djembefx/css/loop-control.css";
+    }
+
     public Loop getLoop() {
         return loop.get();
     }

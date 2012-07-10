@@ -1,0 +1,18 @@
+.loop-control .loop {
+    -fx-stroke: lightgray;
+    -fx-stroke-width: 2;
+    -fx-fill: transparent;
+}
+
+.loop-control:hover .loop {
+    -fx-stroke-width: 4;
+}
+
+.loop-control-selected .loop {
+    -fx-stroke: black;
+    -fx-stroke-width: 2;
+}
+
+.loop-control-node .note {
+    -fx-stroke: black;
+}
