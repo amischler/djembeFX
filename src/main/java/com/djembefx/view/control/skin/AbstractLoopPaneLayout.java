@@ -1,6 +1,7 @@
 package com.djembefx.view.control.skin;
 
 import com.djembefx.view.control.LoopControl;
+import com.djembefx.view.control.LoopPaneLayout;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -17,7 +18,7 @@ import java.util.Map;
  * Date: 01/07/12
  * Time: 20:49
  */
-public class AbstractLoopPaneLayout {
+public abstract class AbstractLoopPaneLayout implements LoopPaneLayout {
 
     private static final Duration DURATION = new Duration(750);
 

@@ -2,7 +2,7 @@ package com.djembefx.application;
 
 import com.djembefx.application.init.Initializer;
 import com.djembefx.ioc.IOC;
-import com.djembefx.model.*;
+import com.djembefx.model.Song;
 import com.djembefx.model.persistence.PersistenceService;
 import com.google.inject.Inject;
 import javafx.application.Application;

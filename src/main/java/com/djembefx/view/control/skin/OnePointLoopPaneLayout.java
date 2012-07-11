@@ -6,7 +6,7 @@ import com.djembefx.view.control.LoopPaneLayout;
 import com.google.inject.Inject;
 import javafx.beans.binding.DoubleBinding;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>
@@ -19,7 +19,7 @@ public class OnePointLoopPaneLayout extends AbstractLoopPaneLayout implements Lo
     Pulser pulser;
 
     @Override
-    public void layout(Collection<LoopControl> loopControls) {
+    public void layout(List<LoopControl> loopControls) {
         for (final LoopControl loopControl : loopControls) {
             final double radius = 100;
             updateRadius(loopControl, radius);

@@ -1,16 +1,16 @@
 .loop-control .loop {
     -fx-stroke: lightgray;
-    -fx-stroke-width: 2;
     -fx-fill: transparent;
+    -fx-stroke-width: 4;
 }
 
 .loop-control:hover .loop {
-    -fx-stroke-width: 4;
+    -fx-stroke-width: 8;
 }
 
 .loop-control-selected .loop {
     -fx-stroke: black;
-    -fx-stroke-width: 2;
+    -fx-stroke-width: 4;
 }
 
 .loop-control .note {

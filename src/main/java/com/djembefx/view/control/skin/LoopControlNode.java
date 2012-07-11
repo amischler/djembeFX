@@ -43,7 +43,7 @@ public class LoopControlNode extends Pane {
 
     private final Circle circle;
 
-    private final DoubleProperty ghosAngleProperty = new SimpleDoubleProperty();
+    private final DoubleProperty ghostAngleProperty = new SimpleDoubleProperty();
 
     private Map<NoteKind, Color> colors = new HashMap<NoteKind, Color>();
 
@@ -63,12 +63,13 @@ public class LoopControlNode extends Pane {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getY() < 0) {
-                    ghosAngleProperty.set(Math.atan(mouseEvent.getX() / mouseEvent.getY()));
+                    ghostAngleProperty.set(Math.atan(mouseEvent.getX() / mouseEvent.getY()));
                 } else {
-                    ghosAngleProperty.set(Math.PI + Math.atan(mouseEvent.getX() / mouseEvent.getY()));
+                    ghostAngleProperty.set(Math.PI + Math.atan(mouseEvent.getX() / mouseEvent.getY()));
                 }
             }
         });
+        circle.setPickOnBounds(false);
         getChildren().add(circle);
         createGhostNode();
     }
@@ -80,22 +81,22 @@ public class LoopControlNode extends Pane {
         ghostNode.visibleProperty().bind(circle.hoverProperty());
         ghostNode.translateXProperty().bind(new DoubleBinding() {
             {
-                bind(circle.radiusProperty(), ghosAngleProperty);
+                bind(circle.radiusProperty(), ghostAngleProperty);
             }
 
             @Override
             protected double computeValue() {
-                return -Math.sin(ghosAngleProperty.getValue()) * circle.getRadius();
+                return -Math.sin(ghostAngleProperty.getValue()) * circle.getRadius();
             }
         });
         ghostNode.translateYProperty().bind(new DoubleBinding() {
             {
-                bind(circle.radiusProperty(), ghosAngleProperty);
+                bind(circle.radiusProperty(), ghostAngleProperty);
             }
 
             @Override
             protected double computeValue() {
-                return -Math.cos(ghosAngleProperty.getValue()) * circle.getRadius();
+                return -Math.cos(ghostAngleProperty.getValue()) * circle.getRadius();
             }
         });
         getChildren().add(ghostNode);
@@ -222,11 +223,11 @@ public class LoopControlNode extends Pane {
     }
 
     public double getGhostAngle() {
-        return ghosAngleProperty.get();
+        return ghostAngleProperty.get();
     }
 
     public ReadOnlyDoubleProperty ghostAngleProperty() {
-        return ghosAngleProperty;
+        return ghostAngleProperty;
     }
 
 }

@@ -22,7 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,7 @@ public class DjembeFXController extends AbstractController {
     AnchorPane loopPropertiesPane;
 
     @FXML
-    Pane editorStackPane;
+    ScrollPane editorScrollPane;
 
     @FXML
     Slider zoomSlider;
@@ -138,7 +137,7 @@ public class DjembeFXController extends AbstractController {
         loopPane.setSkin(loopPaneSkin);
         loopPane.scaleXProperty().bind(zoomSlider.valueProperty());
         loopPane.scaleYProperty().bind(zoomSlider.valueProperty());
-        editorStackPane.getChildren().add(loopPane);
+        editorScrollPane.setContent(loopPane);
     }
 
     private void initializeLoopPropertiesPane() {

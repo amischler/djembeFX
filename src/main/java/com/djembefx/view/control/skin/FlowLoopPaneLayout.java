@@ -4,7 +4,7 @@ import com.djembefx.view.control.LoopControl;
 import com.djembefx.view.control.LoopPaneLayout;
 import javafx.beans.binding.DoubleBinding;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>
@@ -13,7 +13,7 @@ import java.util.Collection;
  */
 public class FlowLoopPaneLayout extends AbstractLoopPaneLayout implements LoopPaneLayout {
     @Override
-    public void layout(Collection<LoopControl> loopControls) {
+    public void layout(List<LoopControl> loopControls) {
         int i = 0;
         for (final LoopControl loopControl : loopControls) {
             updateRadius(loopControl, 50 + i * 20);
@@ -25,6 +25,7 @@ public class FlowLoopPaneLayout extends AbstractLoopPaneLayout implements LoopPa
                     return 0;
                 }
             });
+            loopControl.toBack();
             i++;
         }
     }

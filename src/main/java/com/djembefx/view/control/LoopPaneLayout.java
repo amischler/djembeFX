@@ -1,6 +1,6 @@
 package com.djembefx.view.control;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>
@@ -9,6 +9,6 @@ import java.util.Collection;
  */
 public interface LoopPaneLayout {
 
-    public void layout(Collection<LoopControl> loopControls);
+    public void layout(List<LoopControl> loopControls);
 
 }

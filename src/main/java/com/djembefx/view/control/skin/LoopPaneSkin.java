@@ -7,8 +7,10 @@ import com.djembefx.view.control.LoopPaneLayout;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -16,8 +18,12 @@ import javafx.scene.Node;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +33,53 @@ import java.util.Map;
  * Time: 21:11
  */
 public class LoopPaneSkin implements Skin<LoopPane> {
+
+    private static class LoopPaneNode extends Region {
+
+        private ObservableList<LoopControl> loopControls = FXCollections.observableList(new LinkedList<LoopControl>());
+
+        private ObjectProperty<LoopPaneLayout> loopPaneLayout = new SimpleObjectProperty<LoopPaneLayout>();
+
+        LoopPaneNode() {
+            Circle center = new Circle();
+            center.setFill(Color.RED);
+            center.setRadius(5);
+            getChildren().add(center);
+            setPrefSize(4000, 4000);
+            loopPaneLayout.addListener(new ChangeListener<LoopPaneLayout>() {
+                @Override
+                public void changed(ObservableValue<? extends LoopPaneLayout> observableValue, LoopPaneLayout loopPaneLayout, LoopPaneLayout loopPaneLayout1) {
+                    requestLayout();
+                }
+            });
+        }
+
+        @Override
+        protected void layoutChildren() {
+            loopPaneLayoutProperty().get().layout(loopControls);
+        }
+
+        public void addLoopControl(final LoopControl loopControl) {
+            getChildren().add(loopControl);
+            loopControls.add(loopControl);
+            /**loopControl.hoverProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean aBoolean1) {
+                    loopControl.toFront();
+                }
+            }); */
+        }
+
+        public void removeLoopControl(LoopControl loopControl) {
+            getChildren().remove(loopControl);
+            loopControls.remove(loopControl);
+        }
+
+        public ObjectProperty<LoopPaneLayout> loopPaneLayoutProperty() {
+            return loopPaneLayout;
+        }
+
+    }
 
     private final LoopPane loopPane;
 
@@ -41,8 +94,6 @@ public class LoopPaneSkin implements Skin<LoopPane> {
     private ChangeListener<ObservableList<Loop>> loopsPropertyListener;
 
     private Map<Loop, LoopControl> loopControlMap = new HashMap<Loop, LoopControl>();
-
-    private ChangeListener<LoopPaneLayout> loopPaneLayoutChangeListener;
 
     final ObjectProperty<SelectionModel<Loop>> loopSelectionModel;
 
@@ -76,12 +127,6 @@ public class LoopPaneSkin implements Skin<LoopPane> {
                 loops1.addListener(loopsChangeListener);
                 removeLoop(loops);
                 addLoop(loops1);
-            }
-        });
-        loopPane.loopPanelLayoutProperty().addListener(loopPaneLayoutChangeListener = new ChangeListener<LoopPaneLayout>() {
-            @Override
-            public void changed(ObservableValue<? extends LoopPaneLayout> observableValue, LoopPaneLayout loopPaneLayout, LoopPaneLayout loopPaneLayout1) {
-                loopPaneLayout1.layout(loopControlMap.values());
             }
         });
         loopSelectionModel.addListener(new ChangeListener<SelectionModel<Loop>>() {
@@ -133,10 +178,9 @@ public class LoopPaneSkin implements Skin<LoopPane> {
 
     private void removeLoop(List<? extends Loop> removed) {
         for (Loop loop : removed) {
-            node.getChildren().remove(loopControlMap.get(loop));
+            node.removeLoopControl(loopControlMap.get(loop));
             loopControlMap.remove(loop);
         }
-        loopPane.getLoopPaneLayout().layout(loopControlMap.values());
     }
 
     private void addLoop(List<? extends Loop> loops) {
@@ -151,13 +195,13 @@ public class LoopPaneSkin implements Skin<LoopPane> {
                     mouseEvent.consume();
                 }
             });
-            node.getChildren().add(loopControl);
+            node.addLoopControl(loopControl);
         }
-        loopPane.getLoopPaneLayout().layout(loopControlMap.values());
     }
 
     private LoopPaneNode createNode() {
         LoopPaneNode loopPaneNode = loopPaneNodeProvider.get();
+        loopPaneNode.loopPaneLayoutProperty().bind(loopPane.loopPanelLayoutProperty());
         return loopPaneNode;
     }
 
@@ -165,6 +209,6 @@ public class LoopPaneSkin implements Skin<LoopPane> {
     public void dispose() {
         loopPane.getLoops().removeListener(loopsChangeListener);
         loopPane.loopsProperty().removeListener(loopsPropertyListener);
-        loopPane.loopPanelLayoutProperty().removeListener(loopPaneLayoutChangeListener);
+        loopPane.loopPanelLayoutProperty().unbind();
     }
 }

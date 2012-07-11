@@ -11,11 +11,7 @@
   <center>
     <AnchorPane id="anchorPane1" prefHeight="200.0" prefWidth="200.0">
       <children>
-        <ScrollPane id="scrollPane1" fx:id="editorScrollPane" hbarPolicy="NEVER" hmin="-1.0" onKeyReleased="#onKeyReleased" pannable="true" prefHeight="319.0" prefWidth="288.0" vbarPolicy="NEVER" vmin="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-          <content>
-            <Pane id="stackPane1" fx:id="editorStackPane" maxHeight="4000.0" maxWidth="4000.0" minHeight="4000.0" minWidth="4000.0" prefHeight="4000.0" prefWidth="4000.0" />
-          </content>
-        </ScrollPane>
+        <ScrollPane id="scrollPane1" fx:id="editorScrollPane" hbarPolicy="ALWAYS" hmax="2.0" hmin="-2.0" onKeyReleased="#onKeyReleased" pannable="true" prefHeight="319.0" prefWidth="288.0" vbarPolicy="ALWAYS" vmax="2.0" vmin="-2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
         <Slider id="sliderHorizontal1" fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.5" max="10.0" value="1.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
         <ChoiceBox fx:id="loopPaneLayoutChoiceBox" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
           <items>
