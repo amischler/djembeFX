@@ -1,4 +1,4 @@
-package com.djembefx.model.event;
+package com.djembefx.application.event;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>

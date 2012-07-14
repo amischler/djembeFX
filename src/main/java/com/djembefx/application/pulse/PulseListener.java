@@ -1,4 +1,4 @@
-package com.djembefx.model.pulse;
+package com.djembefx.application.pulse;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>

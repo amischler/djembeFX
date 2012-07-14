@@ -1,4 +1,4 @@
-package com.djembefx.model.event;
+package com.djembefx.application.event;
 
 import com.djembefx.model.Instrument;
 import com.djembefx.model.Note;

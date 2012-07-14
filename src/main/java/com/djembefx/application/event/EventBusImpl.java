@@ -1,4 +1,4 @@
-package com.djembefx.model.event;
+package com.djembefx.application.event;
 
 import javafx.application.Platform;
 

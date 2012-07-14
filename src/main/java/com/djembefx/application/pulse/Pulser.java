@@ -1,4 +1,4 @@
-package com.djembefx.model.pulse;
+package com.djembefx.application.pulse;
 
 import javafx.application.Platform;
 import javafx.beans.property.*;

@@ -1,7 +1,7 @@
-package com.djembefx.model.event.ioc;
+package com.djembefx.application.event.ioc;
 
-import com.djembefx.model.event.EventBus;
-import com.djembefx.model.event.EventBusImpl;
+import com.djembefx.application.event.EventBus;
+import com.djembefx.application.event.EventBusImpl;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
