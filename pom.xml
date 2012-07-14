@@ -7,6 +7,9 @@
     <groupId>com.djembefx</groupId>
     <artifactId>djembefx</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <organization>
+        <name>com.djembeFX</name>
+    </organization>
     <dependencies>
         <dependency>
             <groupId>com.oracle</groupId>
@@ -34,5 +37,75 @@
             <version>1.0.1</version>
         </dependency-->
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target xmlns:fx="javafx:com.sun.javafx.tools.ant">
+                                <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+                                         uri="javafx:com.sun.javafx.tools.ant"
+                                         classpath="ant/ant-javafx.jar"
+                                        />
+                                <fx:application id="djembeFX"
+                                                name="djembeFX"
+                                                mainclass="com.djembefx.application.DjembeFX"/>
+
+                                <fx:resources id="appRes">
+                                    <fx:fileset dir="${project.build.directory}/lib">
+                                        <include name="*.*"/>
+                                    </fx:fileset>
+                                    <fx:fileset dir= "${project.build.directory}">
+                                        <include name="djembeFX.jar"/>
+                                    </fx:fileset>
+                                </fx:resources>
+                                <fx:jar destfile="target/djembeFX.jar">
+                                    <fx:application refid="djembeFX"/>
+                                    <manifest>
+                                        <attribute name="Implementation-Vendor"
+                                                   value="Mischler"/>
+                                        <attribute name="Implementation-Title"
+                                                   value="DjembeFX"/>
+                                        <attribute name="Implementation-Version" value="{project.version}"/>
+                                    </manifest>
+
+                                    <fileset dir="${project.build.outputDirectory}"/>
+                                </fx:jar>
+                                <fx:deploy nativeBundles="all"
+                                           outdir="${project.build.directory}"
+                                           outfile="${project.name}">
+                                    <fx:application refId="djembeFX"/>
+                                    <fx:resources refid="appRes"/>
+                                    <fx:info title="djembeFX"
+                                             vendor="mischler"/>
+                                </fx:deploy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
