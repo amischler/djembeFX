@@ -14,7 +14,9 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>javafx-runtime</artifactId>
-            <version>2.2.0-beta</version>
+            <scope>system</scope>
+            <version>2.1.1</version>
+            <systemPath>${java.home}/../jre/lib/jfxrt.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
@@ -73,7 +75,7 @@
                                     <fx:fileset dir="${project.build.directory}/lib">
                                         <include name="*.*"/>
                                     </fx:fileset>
-                                    <fx:fileset dir= "${project.build.directory}">
+                                    <fx:fileset dir="${project.build.directory}">
                                         <include name="djembeFX.jar"/>
                                     </fx:fileset>
                                 </fx:resources>
