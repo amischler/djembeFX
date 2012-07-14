@@ -1,6 +1,6 @@
 package com.djembefx.render;
 
-import com.djembefx.model.Instrument;
+import com.djembefx.model.instrument.Instrument;
 import com.djembefx.model.Note;
 import com.google.inject.ImplementedBy;
 

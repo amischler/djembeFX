@@ -1,6 +1,7 @@
 package com.djembefx.model.persistence.delegate;
 
 import com.djembefx.model.*;
+import com.djembefx.model.instrument.Instrument;
 import javafx.collections.ObservableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

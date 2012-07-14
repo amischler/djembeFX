@@ -38,7 +38,7 @@ public class Pulser {
                         public void run() {
                             pulse();
                         }
-                    }, 0, 10);
+                    }, 0, 20);
                 } else if (status1 == Status.STOPPED) {
                     timer.cancel();
                     timerPulse = 0;

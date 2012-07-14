@@ -1,7 +1,9 @@
 package com.djembefx.model.instrument;
 
+import com.djembefx.model.AbstractNoteKind;
 import com.djembefx.model.NoteKind;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -11,9 +13,16 @@ import java.util.Collection;
  */
 public class DunDunType implements InstrumentType {
 
+    public final static NoteKind<DunDunType> OPEN = new AbstractNoteKind<DunDunType>("Open");
+
+    public final static NoteKind<DunDunType> MUFFLED = new AbstractNoteKind<DunDunType>("Muffled");
+
+    public final static NoteKind<DunDunType> BELL = new AbstractNoteKind<DunDunType>("Bell");
+
+
     @Override
     public Collection<NoteKind> getAvailableNoteTypes() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return Arrays.asList(new NoteKind[]{OPEN, MUFFLED, BELL});
     }
 
 }

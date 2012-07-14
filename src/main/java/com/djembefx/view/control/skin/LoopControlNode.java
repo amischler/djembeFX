@@ -4,7 +4,7 @@ import com.djembefx.application.event.DeleteNoteEvent;
 import com.djembefx.application.event.EventBus;
 import com.djembefx.application.event.EventListener;
 import com.djembefx.application.event.PlayNoteEvent;
-import com.djembefx.model.DjembeType;
+import com.djembefx.model.instrument.DjembeType;
 import com.djembefx.model.Loop;
 import com.djembefx.model.Note;
 import com.djembefx.model.NoteKind;
@@ -61,7 +61,7 @@ public class LoopControlNode extends Pane {
 
     public LoopControlNode() {
         colors.put(DjembeType.TONE, Color.BROWN);
-        colors.put(DjembeType.OPEN, Color.RED);
+        colors.put(DjembeType.BAS, Color.RED);
         colors.put(DjembeType.SLAP, Color.ORANGE);
         this.circle = new Circle();
         circle.getStyleClass().add("loop");

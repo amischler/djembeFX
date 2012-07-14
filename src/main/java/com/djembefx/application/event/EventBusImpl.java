@@ -18,7 +18,6 @@ public class EventBusImpl implements EventBus {
 
     @Override
     public void publish(Event event) {
-        System.out.println("Publishing " + event);
         for (EventListener eventListener : listeners.get(event.getClass())) {
             eventListener.onEvent(event);
         }

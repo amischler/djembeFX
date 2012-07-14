@@ -1,5 +1,6 @@
 package com.djembefx.model.instrument;
 
+import com.djembefx.model.AbstractNoteKind;
 import com.djembefx.model.NoteKind;
 
 import java.util.Arrays;
@@ -12,63 +13,14 @@ import java.util.Collection;
  */
 public class DjembeType implements InstrumentType {
 
-    public final static NoteKind<DjembeType> TONE = new Tone();
+    public final static NoteKind<DjembeType> TONE = new AbstractNoteKind<DjembeType>("Tone");
 
-    public final static NoteKind<DjembeType> SLAP = new Slap();
+    public final static NoteKind<DjembeType> SLAP = new AbstractNoteKind<DjembeType>("Slap");
 
-    public final static NoteKind<DjembeType> OPEN = new Open();
-
-
-    public static class Tone implements NoteKind<DjembeType> {
-
-        public String toString() {
-            return "Tone";
-        }
-
-        public int hashCode() {
-            return getClass().hashCode();
-        }
-
-        public boolean equals(Object o) {
-            return getClass().equals(o.getClass());
-        }
-
-    }
-
-    public static class Slap implements NoteKind<DjembeType> {
-
-        public String toString() {
-            return "Slap";
-        }
-
-        public int hashCode() {
-            return getClass().hashCode();
-        }
-
-        public boolean equals(Object o) {
-            return getClass().equals(o.getClass());
-        }
-
-    }
-
-    public static class Open implements NoteKind<DjembeType> {
-
-        public String toString() {
-            return "Open";
-        }
-
-        public int hashCode() {
-            return getClass().hashCode();
-        }
-
-        public boolean equals(Object o) {
-            return getClass().equals(o.getClass());
-        }
-
-    }
+    public final static NoteKind<DjembeType> BAS = new AbstractNoteKind<DjembeType>("Bas");
 
     @Override
     public Collection<NoteKind> getAvailableNoteTypes() {
-        return Arrays.asList(new NoteKind[]{TONE, SLAP, OPEN});
+        return Arrays.asList(new NoteKind[]{TONE, SLAP, BAS});
     }
 }

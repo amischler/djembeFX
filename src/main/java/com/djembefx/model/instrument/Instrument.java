@@ -10,7 +10,7 @@ import com.djembefx.model.NoteKind;
 public interface Instrument<T extends InstrumentType> {
 
     /**
-     * Return the audio clip associated with this intrument for the given note kind.
+     * Return the audio clip associated with this instrument for the given note kind.
      *
      * @param noteKind
      * @return

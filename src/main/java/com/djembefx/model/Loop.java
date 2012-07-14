@@ -1,5 +1,6 @@
 package com.djembefx.model;
 
+import com.djembefx.model.instrument.Instrument;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;

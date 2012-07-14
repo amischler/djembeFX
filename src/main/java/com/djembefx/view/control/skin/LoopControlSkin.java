@@ -1,6 +1,6 @@
 package com.djembefx.view.control.skin;
 
-import com.djembefx.model.DjembeType;
+import com.djembefx.model.instrument.DjembeType;
 import com.djembefx.model.Loop;
 import com.djembefx.model.Note;
 import com.djembefx.view.control.LoopControl;

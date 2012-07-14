@@ -1,6 +1,6 @@
 package com.djembefx.render;
 
-import com.djembefx.model.Instrument;
+import com.djembefx.model.instrument.Instrument;
 import com.djembefx.model.Note;
 import javafx.scene.media.AudioClip;
 
@@ -17,7 +17,6 @@ public class SoundRendererImpl implements SoundRenderer {
 
     @Override
     public void render(Note note, Instrument instrument) {
-        System.out.println("Rendering" + note + " @" + System.nanoTime());
         getOrCreateAudioClip(instrument.getClip(note.getNoteKind())).play(0.5);
     }
 
