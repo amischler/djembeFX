@@ -1,4 +1,6 @@
-package com.djembefx.model;
+package com.djembefx.model.instrument;
+
+import com.djembefx.model.NoteKind;
 
 /**
  * User: Antoine Mischler <antoine@dooapp.com>

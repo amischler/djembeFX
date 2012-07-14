@@ -1,5 +1,8 @@
-package com.djembefx.model;
+package com.djembefx.model.instrument.impl;
 
+import com.djembefx.model.NoteKind;
+import com.djembefx.model.instrument.DjembeType;
+import com.djembefx.model.instrument.Instrument;
 import com.djembefx.render.SoundRendererImpl;
 
 /**
