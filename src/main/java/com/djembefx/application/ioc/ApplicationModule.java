@@ -1,5 +1,7 @@
 package com.djembefx.application.ioc;
 
+import com.djembefx.application.handler.DeleteNoteHandler;
+import com.djembefx.application.handler.Handler;
 import com.djembefx.application.init.CssLoaderInitializer;
 import com.djembefx.application.init.Initializer;
 import com.djembefx.application.init.PlayerInitializer;
@@ -33,6 +35,14 @@ public class ApplicationModule extends AbstractModule {
         initializerList.add(playerInitializer);
         initializerList.add(cssLoaderInitializer);
         return initializerList;
+    }
+
+    @Provides
+    @Singleton
+    public List<Handler> providesHandler(DeleteNoteHandler deleteNoteHandler) {
+        List<Handler> handlerList = new LinkedList<Handler>();
+        handlerList.add(deleteNoteHandler);
+        return handlerList;
     }
 
 }

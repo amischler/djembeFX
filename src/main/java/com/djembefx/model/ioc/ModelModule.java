@@ -1,8 +1,8 @@
 package com.djembefx.model.ioc;
 
-import com.djembefx.model.event.ioc.EventModule;
+import com.djembefx.application.event.ioc.EventModule;
 import com.djembefx.model.persistence.ioc.PersistenceModule;
-import com.djembefx.model.pulse.Pulser;
+import com.djembefx.application.pulse.Pulser;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 

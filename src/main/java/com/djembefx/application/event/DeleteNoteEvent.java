@@ -18,4 +18,12 @@ public class DeleteNoteEvent implements Event {
         this.note = note;
         this.loop = loop;
     }
+
+    public Note getNote() {
+        return note;
+    }
+
+    public Loop getLoop() {
+        return loop;
+    }
 }

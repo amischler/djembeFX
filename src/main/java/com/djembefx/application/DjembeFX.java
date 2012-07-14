@@ -1,5 +1,9 @@
 package com.djembefx.application;
 
+import com.djembefx.application.event.Event;
+import com.djembefx.application.event.EventBus;
+import com.djembefx.application.event.EventListener;
+import com.djembefx.application.handler.Handler;
 import com.djembefx.application.init.Initializer;
 import com.djembefx.ioc.IOC;
 import com.djembefx.model.Song;
@@ -35,12 +39,19 @@ public class DjembeFX extends Application {
     @Inject
     List<Initializer> initializerList;
 
+    @Inject
+    List<Handler> handlerList;
+
+    @Inject
+    EventBus eventBus;
+
     private StringProperty stageTitle;
 
     @java.lang.Override
     public void start(Stage stage) throws Exception {
         initIoc();
         initInitializers();
+        initHandlers();
         this.stageTitle = stage.titleProperty();
         configure(currentSong.get());
         currentSong.addListener(new ChangeListener<Song>() {
@@ -52,6 +63,17 @@ public class DjembeFX extends Application {
         });
         showStage(stage);
         currentSong.set(Demo.createDemoSong());
+    }
+
+    private void initHandlers() {
+        for (final Handler handler : handlerList) {
+            eventBus.addEventListener(handler.getEventClass(), new EventListener() {
+                @Override
+                public void onEvent(Event event) {
+                    handler.handle(event);
+                }
+            });
+        }
     }
 
     private void showStage(Stage stage) {

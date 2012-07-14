@@ -1,8 +1,8 @@
 package com.djembefx.application.init;
 
-import com.djembefx.model.event.EventBus;
-import com.djembefx.model.event.EventListener;
-import com.djembefx.model.event.PlayNoteEvent;
+import com.djembefx.application.event.EventBus;
+import com.djembefx.application.event.EventListener;
+import com.djembefx.application.event.PlayNoteEvent;
 import com.djembefx.render.SoundRenderer;
 import com.google.inject.Inject;
 

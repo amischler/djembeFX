@@ -1,11 +1,13 @@
 package com.djembefx.view.control.skin;
 
+import com.djembefx.application.event.DeleteNoteEvent;
+import com.djembefx.application.event.EventBus;
+import com.djembefx.application.event.EventListener;
+import com.djembefx.application.event.PlayNoteEvent;
 import com.djembefx.model.DjembeType;
+import com.djembefx.model.Loop;
 import com.djembefx.model.Note;
 import com.djembefx.model.NoteKind;
-import com.djembefx.model.event.EventBus;
-import com.djembefx.model.event.EventListener;
-import com.djembefx.model.event.PlayNoteEvent;
 import com.google.inject.Inject;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
@@ -14,6 +16,8 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -49,6 +53,8 @@ public class LoopControlNode extends Pane {
 
     private Map<Note, EventListener> eventListenerMap = new HashMap<Note, EventListener>();
 
+    private Map<Note, ChangeListener<Boolean>> hoverListenerMap = new HashMap<Note, ChangeListener<Boolean>>();
+
     private List<Node> majorTicks = new LinkedList<Node>();
 
     private List<Node> minorTicks = new LinkedList<Node>();
@@ -78,6 +84,7 @@ public class LoopControlNode extends Pane {
         Circle ghostNode = new Circle();
         ghostNode.getStyleClass().add("ghost");
         ghostNode.setRadius(5);
+        ghostNode.setMouseTransparent(true);
         ghostNode.visibleProperty().bind(circle.hoverProperty());
         ghostNode.translateXProperty().bind(new DoubleBinding() {
             {
@@ -106,11 +113,38 @@ public class LoopControlNode extends Pane {
         return circle;
     }
 
-    public void addNote(final Note note, final DoubleProperty angle) {
-        Circle noteNode = new Circle();
+    public Node addNote(final Note note, final DoubleProperty angle, final Loop loop) {
+        final Circle noteNode = new Circle();
         noteNode.getStyleClass().add("note");
         noteNode.setRadius(5);
         noteNode.setFill(colors.get(note.getNoteKind()));
+        noteNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                eventBus.publish(new DeleteNoteEvent(note, loop));
+            }
+        });
+        final ScaleTransition hoverScaleTransition = ScaleTransitionBuilder.create()
+                .node(noteNode)
+                .fromX(1.0)
+                .fromY(1.0)
+                .toY(1.5)
+                .toX(1.5)
+                .duration(Duration.millis(150))
+                .build();
+        ChangeListener<Boolean> hoverChangeListener = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean aBoolean1) {
+                if (aBoolean1) {
+                    hoverScaleTransition.setRate(1.0);
+                } else {
+                    hoverScaleTransition.setRate(-1.0);
+                }
+                hoverScaleTransition.play();
+            }
+        };
+        noteNode.hoverProperty().addListener(hoverChangeListener);
+        hoverListenerMap.put(note, hoverChangeListener);
         noteNode.translateXProperty().bind(new DoubleBinding() {
             {
                 bind(circle.radiusProperty(), angle);
@@ -151,6 +185,7 @@ public class LoopControlNode extends Pane {
         };
         eventListenerMap.put(note, eventListener);
         eventBus.addEventListener(PlayNoteEvent.class, eventListener);
+        return noteNode;
     }
 
     public void removeNote(Note note) {
@@ -160,6 +195,8 @@ public class LoopControlNode extends Pane {
             noteNode.translateYProperty().unbind();
             getChildren().remove(noteNode);
             eventBus.removeEventListener(PlayNoteEvent.class, eventListenerMap.get(note));
+            noteNode.hoverProperty().removeListener(hoverListenerMap.get(note));
+            hoverListenerMap.remove(note);
             eventListenerMap.remove(note);
             noteMap.remove(note);
         }
@@ -219,6 +256,7 @@ public class LoopControlNode extends Pane {
                 return -Math.cos(angle) * circle.getRadius();
             }
         });
+        line.setMouseTransparent(true);
         return line;
     }
 

@@ -150,7 +150,7 @@ public class LoopControlSkin implements Skin<LoopControl> {
                 return 2 * Math.PI * key.longValue() / loopControl.getLoop().getLength();
             }
         });
-        node.addNote(note, angle);
+        node.addNote(note, angle, loopControl.getLoop());
     }
 
     @Override

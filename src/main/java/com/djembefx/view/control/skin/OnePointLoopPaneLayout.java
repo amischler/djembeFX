@@ -1,6 +1,6 @@
 package com.djembefx.view.control.skin;
 
-import com.djembefx.model.pulse.Pulser;
+import com.djembefx.application.pulse.Pulser;
 import com.djembefx.view.control.LoopControl;
 import com.djembefx.view.control.LoopPaneLayout;
 import com.google.inject.Inject;
