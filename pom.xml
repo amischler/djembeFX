@@ -51,6 +51,7 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <excludeScope>system</excludeScope>
                         </configuration>
                     </execution>
                 </executions>
@@ -83,9 +84,9 @@
                                     <fx:application refid="djembeFX"/>
                                     <manifest>
                                         <attribute name="Implementation-Vendor"
-                                                   value="Mischler"/>
+                                                   value="${project.groupId}"/>
                                         <attribute name="Implementation-Title"
-                                                   value="DjembeFX"/>
+                                                   value="${project.artifactId}"/>
                                         <attribute name="Implementation-Version" value="{project.version}"/>
                                     </manifest>
 
